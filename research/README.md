@@ -1,10 +1,10 @@
 # Исследовательская библиотека JediKit
 
-Основания пяти русскоязычных Agent Skill: `jedikit-tasks` для задач в
+Основания шести русскоязычных Agent Skill: `jedikit-tasks` для задач в
 SingularityApp, `jedikit-habits` для экспериментов и ритуалов в Habitify,
-`jedikit-calendar` для Google Calendar, `jedikit-planning` для Плана дня
-и всегда загруженный навигатор `jedikit` — карта скиллов и носитель
-предпочтений.
+`jedikit-calendar` для Google Calendar, `jedikit-planning` для Плана дня,
+`jedikit-notes` для Хранилища Obsidian и всегда загруженный навигатор
+`jedikit` — карта скиллов и носитель предпочтений.
 Действующие правила находятся в [`skills/`](../skills/), термины — в
 [CONTEXT.md](../CONTEXT.md), решения — в [ADR](../docs/adr/).
 
@@ -21,6 +21,9 @@ SingularityApp, `jedikit-habits` для экспериментов и ритуа
 | Что известно о планировании времени и календаре из исследований? | [Научные основания календаря](calendar/academic.md) |
 | Как авторы методов и пользователи работают с календарём? | [Методы и практики](calendar/methods-and-practices.md) |
 | Как окрашивать записи календаря? | [Цвет записей календаря](calendar/event-colors.md) |
+| Что известно о личных архивах, заметках, дневниках и агентской вики? | [Хранилище](notes/README.md), [академические основания](notes/academic.md), [практики сообщества](notes/community-practices.md) |
+| Где вести идеи и как к ним возвращаться? | [Идеи](notes/ideas.md) |
+| Какие поля у Заметок, как собрать все идеи и как ссылаться на Заметку из провайдера? | [Поля Заметок](notes/fields.md) |
 | Какие контракты доступны провайдерам? | [SingularityApp](providers/singularity.md), [Habitify](providers/habitify.md), [Google Calendar](providers/google-calendar.md) |
 | Когда и как уточнять запрос? | [Доспрос](agents/clarification.md) |
 | Как связывать скиллы и находить нужный сценарий? | [Композиция скиллов](agents/skill-composition.md) |
@@ -35,11 +38,12 @@ SingularityApp, `jedikit-habits` для экспериментов и ритуа
 
 | Скилл | Досье |
 | --- | --- |
-| `jedikit-tasks` | [авторский метод](tasks/author-method.md), [практики](tasks/community-practices.md), [академические основания](tasks/academic.md), [структура](tasks/structure.md), [SingularityApp](providers/singularity.md) |
-| `jedikit-habits` | [привычки](habits/README.md) и досье раздела, [ритуалы](habits/rituals.md), [Habitify](providers/habitify.md) |
+| `jedikit-tasks` | [авторский метод](tasks/author-method.md), [практики](tasks/community-practices.md), [академические основания](tasks/academic.md), [структура](tasks/structure.md), [SingularityApp](providers/singularity.md); перенос Идеи и обратная ссылка проекта — [идеи](notes/ideas.md), [поля](notes/fields.md) |
+| `jedikit-habits` | [привычки](habits/README.md) и досье раздела, [ритуалы](habits/rituals.md), [Habitify](providers/habitify.md); обратная ссылка привычки — [поля](notes/fields.md) |
 | `jedikit-calendar` | [наука календаря](calendar/academic.md), [методы и практики](calendar/methods-and-practices.md), [цвет записей](calendar/event-colors.md), [Google Calendar](providers/google-calendar.md) |
 | `jedikit-planning` | [наука календаря](calendar/academic.md), [методы и практики](calendar/methods-and-practices.md), [цвет записей](calendar/event-colors.md), [академические основания задач](tasks/academic.md) |
-| `jedikit` | [композиция скиллов](agents/skill-composition.md), [рекомендации setup](setup.md) |
+| `jedikit-notes` | [Хранилище](notes/README.md): [академические основания](notes/academic.md), [практики сообщества](notes/community-practices.md), [идеи](notes/ideas.md), [поля](notes/fields.md); [хост Hermes](platforms/hermes.md) — встроенные `llm-wiki` и `obsidian`, песочница и кэш; [рекомендации setup, §4.9](setup.md#49-jedikitnotesvault_name) |
+| `jedikit` | [композиция скиллов](agents/skill-composition.md), [рекомендации setup](setup.md), [идеи](notes/ideas.md) — маршрутизация «запиши …» |
 | Все скиллы | [доспрос](agents/clarification.md), [композиция скиллов](agents/skill-composition.md), [хост Hermes](platforms/hermes.md) |
 
 Ссылки досье на текст скиллов закреплены на ревизии, которую досье анализировали.

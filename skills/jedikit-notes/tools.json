@@ -1,0 +1,52 @@
+{
+  "version": 2,
+  "tools": [
+    {
+      "toolset": "file",
+      "name": "read_file",
+      "access": "read"
+    },
+    {
+      "toolset": "file",
+      "name": "search_files",
+      "access": "read"
+    },
+    {
+      "toolset": "file",
+      "name": "write_file",
+      "access": "write"
+    },
+    {
+      "toolset": "file",
+      "name": "patch",
+      "access": "write"
+    },
+    {
+      "toolset": "terminal",
+      "name": "terminal",
+      "access": "write"
+    },
+    {
+      "toolset": "web",
+      "name": "web_extract",
+      "access": "read",
+      "optional": true
+    },
+    {
+      "toolset": "skills",
+      "name": "skill_view",
+      "access": "read"
+    },
+    {
+      "toolset": "skills",
+      "name": "skills_list",
+      "access": "read",
+      "optional": true
+    },
+    {
+      "toolset": "clarify",
+      "name": "clarify",
+      "access": "read"
+    }
+  ]
+}
