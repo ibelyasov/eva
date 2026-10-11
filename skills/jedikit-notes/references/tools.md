@@ -60,7 +60,6 @@
 - корень Хранилища и совпадение `OBSIDIAN_VAULT_PATH` и `WIKI_PATH`;
 - загружаются ли `llm-wiki` и `obsidian`;
 - есть ли `SCHEMA.md`, `AGENTS.md`, `index.md`, `log.md`; число записей `log.md`;
-- список Hold из `AGENTS.md`;
 - `jedikit.notes.vault_name` и `jedikit.timezone` из блока `[Skill config …]`;
 - доступность инструментов из `tools.json`.
 

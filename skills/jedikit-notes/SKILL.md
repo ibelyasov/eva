@@ -28,8 +28,8 @@ description: "Хранилище Obsidian: вики знаний, дневник
 | Вопрос по базе | Ответ со ссылками на заметки | [wiki.md](references/wiki.md#вопрос) |
 | «Проверь вики»; массовая правка по просьбе | Отчёт lint; правка целиком | [wiki.md](references/wiki.md#lint) |
 | Курс, сообщество, сфера жизни, работа, проект, привычка | Доменная заметка; обратная ссылка у провайдера | [areas.md](references/areas.md) |
-| «Держи X», «отпусти X»; «всегда делай так» | Hold (approval Hermes); правило в `SCHEMA.md` после «Да» | [write-policy.md](references/write-policy.md#hold) |
-| `status` | Корень, основы, служебные файлы, Hold, предпочтения, инструменты; без записей | [tools.md](references/tools.md#status) |
+| «Всегда делай так» | Правило в `SCHEMA.md` после «Да» | [write-policy.md](references/write-policy.md#всегда-делай-так) |
+| `status` | Корень, основы, служебные файлы, предпочтения, инструменты; без записей | [tools.md](references/tools.md#status) |
 | `help` | Возможности и 2–3 примера | этот файл |
 
 ## Уточнение и согласие
