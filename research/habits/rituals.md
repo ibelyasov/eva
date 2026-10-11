@@ -1,13 +1,13 @@
 # Ритуалы: последовательности привычек и механика Habitify
 
-**Дата доступа к внешним источникам:** 2026-10-07. Наука, авторские методы и контракт Habitify отделены от продуктовых соглашений JediKit.
+**Дата доступа к внешним источникам:** 2026-10-07. Наука, авторские методы и контракт Habitify отделены от продуктовых соглашений Eva.
 
 Рабочее определение владельца: **ритуал** — несколько привычек, выполняемых подряд
 в определённой части дня; утренние десять действий — пример, а не рекомендуемая
 доза. Сон как одно действие ритуалом не считается. Это определение задачи, а не
 универсальное академическое определение ritual.
 
-В JediKit Ритуал — Область Habitify, отмеченная в настройках; состав хранится
+В Eva Ритуал — Область Habitify, отмеченная в настройках; состав хранится
 в Habitify, порядок пользователь задаёт вручную в приложении, время старта —
 напоминание первой привычки. `habitStacks` — необязательные переходы уведомлений,
 а не источник порядка. Календарный Распорядок хранит время и длительность блока;
@@ -20,10 +20,10 @@
 [README привычек](README.md), базовый контракт провайдера —
 в [habitify.md](../providers/habitify.md). Здесь рассматриваются именно связи
 между действиями. Действующие правила находятся в
-[areas](https://github.com/ibelyasov/jedikit/blob/43fc19e/skills/jedikit-habits/references/areas.md),
-[habitify-tools](https://github.com/ibelyasov/jedikit/blob/43fc19e/skills/jedikit-habits/references/habitify-tools.md),
-[operation-policy](https://github.com/ibelyasov/jedikit/blob/43fc19e/skills/jedikit-habits/references/operation-policy.md)
-и [habit-method скилла](https://github.com/ibelyasov/jedikit/blob/43fc19e/skills/jedikit-habits/references/habit-method.md).
+[areas](https://github.com/ibelyasov/eva/blob/43fc19e/skills/jedikit-habits/references/areas.md),
+[habitify-tools](https://github.com/ibelyasov/eva/blob/43fc19e/skills/jedikit-habits/references/habitify-tools.md),
+[operation-policy](https://github.com/ibelyasov/eva/blob/43fc19e/skills/jedikit-habits/references/operation-policy.md)
+и [habit-method скилла](https://github.com/ibelyasov/eva/blob/43fc19e/skills/jedikit-habits/references/habit-method.md).
 Изменений этих правил исследование не вносит.
 
 ## 1. Как читать основания
@@ -137,7 +137,7 @@ Last-Modified `Mon, 18 May 2026 02:52:25 GMT`.
 | Точное время | `B/reminders/properties/timeTriggers/items`: `time.hour` 0–23, `minute` 0–59; optional `occurrenceFilter.weekDays` 1–7, Sunday=1; `showLiveActivity` и `showAsAlarm`. | Несколько time reminders и Custom Schedule: [HABITIFY-UI-REMINDERS](../sources.md), [Help](https://intercom.help/habitify-app/en/articles/12396874-good-habit-setting-reminders). Не путать эти weekdays с occurrence 0–6. |
 | Сцепление | `B/reminders/properties/habitStacks/items`: обязательны `conditionHabitId`, `type`, `timerType`. Значения `type`: `completed`, `skipped`, `failed`, `reminder`; значения `timerType`: `immediately`, `after`. `timerDelaySecs` — integer seconds, требуется при after по description, без formal conditional/minimum. | [HABITIFY-UI-HABIT-STACKING](../sources.md), [Help](https://intercom.help/habitify-app/en/articles/6113696-how-to-set-a-habit-stacking-reminders): Edit целевой привычки → Reminder → Habit Stacking; Completed/Skipped/Failed, Immediately/After. Условие `reminder` эта статья не объясняет. |
 | Порядок списка | Поле/endpoint порядка привычек и областей в просмотренном OpenAPI не найдены. Порядок массива ответа не объявлен порядком ритуала. | Отдельная сортировка внутри Custom Area, отличная от All Habits: [HABITIFY-UI-AREA-HABIT-ORDER](../sources.md), [Help](https://intercom.help/habitify-app/en/articles/9651556-how-to-arrange-habits-in-a-custom-area). Порядок Areas на панели — другая настройка: [HABITIFY-UI-AREA-BAR-ORDER](../sources.md), [Help](https://intercom.help/habitify-app/en/articles/9651608-how-to-arrange-areas-on-the-area-bar). |
-| Описание и заметки | `Habit.description` доступно при create/update; `Note.content` — отдельный CRUD заметок привычки. Area.description указан в response required, но отсутствует в properties/input. | Человекочитаемое время/якорь можно описать в тексте, но текст не запускает уведомление. План эксперимента JediKit остаётся в Note; description его не подменяет. GET notes назван paginated, но query/cursor и отдельный GET note не описаны. |
+| Описание и заметки | `Habit.description` доступно при create/update; `Note.content` — отдельный CRUD заметок привычки. Area.description указан в response required, но отсутствует в properties/input. | Человекочитаемое время/якорь можно описать в тексте, но текст не запускает уведомление. План эксперимента Eva остаётся в Note; description его не подменяет. GET notes назван paginated, но query/cursor и отдельный GET note не описаны. |
 | Объект ритуала | Отдельные Routine/Ritual/Stack CRUD, session runner и единый completion ритуала в проверенном документе не найдены. `habitStacks` — вложенные правила reminders. | Нативная функция **Habit Stacking** есть; отдельный first-class routine с составом, общей сессией и выполнением в просмотренных guides не найден. Отсутствие в корпусе не доказывает отсутствие во всём сервисе. |
 
 **Ключевая семантика.** Для «A → B → C» правило с `conditionHabitId=A`
@@ -174,7 +174,7 @@ UI обещает снижение decision fatigue и более быстрое
    только согласованная правка и независимый `get-habit` после записи.
    Проверяются и остальные области, Time of Day, цели, расписание,
    напоминания, endCondition. Promise PUT о сохранении omitted fields —
-   vendor statement, не отмена [guard скилла](https://github.com/ibelyasov/jedikit/blob/43fc19e/skills/jedikit-habits/references/habitify-tools.md#конфигурация-привычки-и-архив).
+   vendor statement, не отмена [guard скилла](https://github.com/ibelyasov/eva/blob/43fc19e/skills/jedikit-habits/references/habitify-tools.md#конфигурация-привычки-и-архив).
    Если response/input или clearing нельзя сопоставить без догадки —
    зависимая запись не выполняется, остаётся инструкция для UI.
 4. **Изменение звена затрагивает соседей.**
@@ -184,13 +184,13 @@ UI обещает снижение decision fatigue и более быстрое
    затронуть другой распорядок; при поиске зависимостей нужен полный inventory,
    не только список одной области. Это риски нашей модели, не обещания vendor.
 5. **Группа операций не атомарна.**
-   Действуют [Preview и operation-policy](https://github.com/ibelyasov/jedikit/blob/43fc19e/skills/jedikit-habits/references/operation-policy.md):
+   Действуют [Preview и operation-policy](https://github.com/ibelyasov/eva/blob/43fc19e/skills/jedikit-habits/references/operation-policy.md):
    последовательно запись → Read-back, стоп на первой ошибке, отчёт
    applied / unverified / unapplied, без слепого повтора и автоматического
    отката. Конфигурация Read-back не доказывает notification delivery.
    В фоне — только чтение. Runtime и конкурентные изменения не проверены.
 
-## 6. Применение и ограничения модели JediKit
+## 6. Применение и ограничения модели Eva
 
 Сборка Ритуала из существующих привычек — организация состава, а не запуск
 нескольких новых экспериментов. Для нового поведения сохраняется правило
@@ -208,7 +208,7 @@ completed(B) не задаёт переход к C. Физическое вып�
 не установлены. Это чтение документации, не runtime-тест.
 
 **Статус.** «7 из 10» показывает отметки участников и пропуски; вердикт
-«выполнен» в JediKit требует отметки всех. Дневные completed не доказывают
+«выполнен» в Eva требует отметки всех. Дневные completed не доказывают
 исполнение подряд или именно внутри этого Ритуала; отсутствие данных не равно
 failure, skipped не равно completed. Явная команда «ритуал выполнен» задаёт
 группу отметок по правилам скилла. Это продуктовая семантика, не научный

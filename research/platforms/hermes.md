@@ -1,6 +1,6 @@
-# Hermes Agent: хост JediKit
+# Hermes Agent: хост Eva
 
-Досье описывает, как Hermes Agent подключает и исполняет шесть скиллов JediKit: `jedikit-tasks`, `jedikit-habits`, `jedikit-calendar`, `jedikit-planning`, `jedikit-notes` и навигатор `jedikit`. Принятые решения — [ADR 0005](../../docs/adr/0005-hermes-host-connections.md), [ADR 0018](../../docs/adr/0018-notes-over-llm-wiki.md), [ADR 0017](../../docs/adr/0017-declarative-preferences.md), [ADR 0011](../../docs/adr/0011-navigator-always-loaded.md), [ADR 0003](../../docs/adr/0003-no-unattended-writes.md), [ADR 0006](../../docs/adr/0006-memory-holds-object-marks.md), [ADR 0013](../../docs/adr/0013-clarification.md) и [ADR 0014](../../docs/adr/0014-confirmations.md); здесь — их основания. Рекомендации значений предпочтений и приглашений — [досье setup](../setup.md).
+Досье описывает, как Hermes Agent подключает и исполняет шесть скиллов Eva: `eva-tasks`, `eva-habits`, `eva-calendar`, `eva-planning`, `eva-notes` и навигатор `eva`. Принятые решения — [ADR 0005](../../docs/adr/0005-hermes-host-connections.md), [ADR 0018](../../docs/adr/0018-notes-over-llm-wiki.md), [ADR 0017](../../docs/adr/0017-declarative-preferences.md), [ADR 0011](../../docs/adr/0011-navigator-always-loaded.md), [ADR 0003](../../docs/adr/0003-no-unattended-writes.md), [ADR 0006](../../docs/adr/0006-memory-holds-object-marks.md), [ADR 0013](../../docs/adr/0013-clarification.md) и [ADR 0014](../../docs/adr/0014-confirmations.md); здесь — их основания. Рекомендации значений предпочтений и приглашений — [досье setup](../setup.md).
 
 ## Версия и типы доказательств
 
@@ -10,21 +10,21 @@
 
 - **Чтение source:** parser, discovery, loader, resolver настроек, cron, validators на pin. Это чтение реализации, не runtime test; прочитанный upstream test обозначает намерение, а не выполненную проверку.
 - **Vendor docs:** официальные страницы о skills, plugins, MCP, memory, cron и Nix; они могут описывать более новый `main` или расходиться с source. [PL-H-3](../sources.md), [PL-H-4](../sources.md), [PL-H-5](../sources.md), [PL-H-6](../sources.md), [PL-H-7](../sources.md), [PL-H-18](../sources.md), [PL-H-SKILL-DOCS-0.21.6](../sources.md)
-- **Конфигурация владельца:** датированное чтение clanwright HEAD `6641f66` и handoff `jedikit-notes` от 2026-10-11; декларации, не подтверждение deployment. [PL-H-66](../sources.md), [CLANWRIGHT-NOTES-HANDOFF-2026-10-11](../sources.md)
-- **Live-наблюдение:** одно сообщение clanwright о setup `jedikit-calendar` ниже. [CLANWRIGHT-SETUP-2026-10-08](../sources.md)
+- **Конфигурация владельца:** датированное чтение clanwright HEAD `6641f66` и handoff `eva-notes` от 2026-10-11; декларации, не подтверждение deployment. [PL-H-66](../sources.md), [CLANWRIGHT-NOTES-HANDOFF-2026-10-11](../sources.md)
+- **Live-наблюдение:** одно сообщение clanwright о setup `eva-calendar` ниже. [CLANWRIGHT-SETUP-2026-10-08](../sources.md)
 
 Hermes на машине исследования не установлен. Установка, validators, OAuth, MCP calls, записи `memory`, задания cron и поведение модели здесь не выполнялись.
 
 ## Подключение: `skills.external_dirs`
 
-JediKit подключается каталогом `skills/` закреплённой ревизии в `skills.external_dirs`; ревизию задаёт источник каталога (checkout, Nix input). Приоритет каталогов — `project → local → skills.create_dir → external_dirs`; изменения подхватываются в новой сессии. [PL-H-4](../sources.md)
+Eva подключается каталогом `skills/` закреплённой ревизии в `skills.external_dirs`; ревизию задаёт источник каталога (checkout, Nix input). Приоритет каталогов — `project → local → skills.create_dir → external_dirs`; изменения подхватываются в новой сессии. [PL-H-4](../sources.md)
 
 | Поверхность | Поведение |
 | --- | --- |
-| Имена скиллов | Голые: `jedikit-tasks` |
+| Имена скиллов | Голые: `eva-tasks` |
 | Индекс скиллов в system prompt | Имя и первые 57 символов `description` + `...` |
 | Поиск и загрузка | Индекс, `skills_list`, `skill_view`, preload `hermes chat --skills '<имя>'` |
-| Slash `/jedikit-tasks` | Да, scanner обходит физические каталоги |
+| Slash `/eva-tasks` | Да, scanner обходит физические каталоги |
 | Защита от записи | Не даёт Hermes: обеспечивается файловой системой (у владельца — Nix store) |
 
 Основания: индекс и усечение description — [PL-H-50](../sources.md), [PL-H-51](../sources.md); `skills_list`/`skill_view` — [PL-H-49](../sources.md); slash scanner — [PL-H-29](../sources.md); preload — [PL-H-30](../sources.md).
@@ -35,23 +35,23 @@ Reader `external_dirs` нормализует пути, проверяет су�
 
 ### Исследованные и отвергнутые способы установки
 
-**Portable plugin (`hermes plugins install`).** Требует `plugin.json` в корне и полный commit SHA в `--ref`; даёт qualified names вида `agent-plugin-jedikit-805a716c:jedikit-tasks`, plugin skills не попадают в индекс, slash не гарантирован. Portable parser допускает `metadata` только как отображение строка→строка: скилл с вложенным `metadata.hermes` даёт diagnostic и пропускается discovery. Поэтому объявление `metadata.hermes.config` у навигатора несовместимо с этим способом, и JediKit его не использует ([ADR 0005](../../docs/adr/0005-hermes-host-connections.md), [ADR 0017](../../docs/adr/0017-declarative-preferences.md)). Чтение 0.21.5: [PL-H-10](../sources.md), [PL-H-8](../sources.md), [PL-H-9](../sources.md), [PL-H-12](../sources.md), [PL-H-16](../sources.md), [PL-H-17](../sources.md), [PL-H-48](../sources.md); наблюдение имени на 0.20.6 — [PL-H-35](../sources.md).
+**Portable plugin (`hermes plugins install`).** Требует `plugin.json` в корне и полный commit SHA в `--ref`; даёт qualified names вида `agent-plugin-eva-805a716c:eva-tasks`, plugin skills не попадают в индекс, slash не гарантирован. Portable parser допускает `metadata` только как отображение строка→строка: скилл с вложенным `metadata.hermes` даёт diagnostic и пропускается discovery. Поэтому объявление `metadata.hermes.config` у навигатора несовместимо с этим способом, и Eva его не использует ([ADR 0005](../../docs/adr/0005-hermes-host-connections.md), [ADR 0017](../../docs/adr/0017-declarative-preferences.md)). Чтение 0.21.5: [PL-H-10](../sources.md), [PL-H-8](../sources.md), [PL-H-9](../sources.md), [PL-H-12](../sources.md), [PL-H-16](../sources.md), [PL-H-17](../sources.md), [PL-H-48](../sources.md); наблюдение имени на 0.20.6 — [PL-H-35](../sources.md).
 
-**Skills Hub.** `hermes skills install ibelyasov/jedikit/skills/<скилл>` ставит один скилл за команду без выбора ревизии, берёт default branch и создаёт изменяемую копию в `$HERMES_HOME/skills`; пять установок могут получить разные ревизии. Для закреплённой ревизии не подходит. [PL-H-63](../sources.md), [PL-H-64](../sources.md), [PL-H-11](../sources.md)
+**Skills Hub.** `hermes skills install ibelyasov/eva/skills/<скилл>` ставит один скилл за команду без выбора ревизии, берёт default branch и создаёт изменяемую копию в `$HERMES_HOME/skills`; пять установок могут получить разные ревизии. Для закреплённой ревизии не подходит. [PL-H-63](../sources.md), [PL-H-64](../sources.md), [PL-H-11](../sources.md)
 
 ## Ресурсы скилла и соседние скиллы
 
-`skill_view(name="<скилл>")` возвращает `SKILL.md`; файлы скилла читаются тем же инструментом: `skill_view(name="<скилл>", file_path="references/write-policy.md")`, `file_path="tools.json"`. Markdown-ссылка сама файл не загружает. `..` и выход за корень скилла запрещены, поэтому общий файл вне скилла недоступен: соседний скилл загружается по своему голому имени, например `skill_view(name="jedikit-calendar")`. Скиллы JediKit читают свои ресурсы только через `skill_view`, даже когда у Потребителя включены файловые инструменты: `read_file` и `write_file` у `jedikit-notes` работают с Хранилищем, а не с каталогом скиллов. [PL-H-49](../sources.md), [PL-H-SKILL-VIEW-0.21.6](../sources.md)
+`skill_view(name="<скилл>")` возвращает `SKILL.md`; файлы скилла читаются тем же инструментом: `skill_view(name="<скилл>", file_path="references/write-policy.md")`, `file_path="tools.json"`. Markdown-ссылка сама файл не загружает. `..` и выход за корень скилла запрещены, поэтому общий файл вне скилла недоступен: соседний скилл загружается по своему голому имени, например `skill_view(name="eva-calendar")`. Скиллы Eva читают свои ресурсы только через `skill_view`, даже когда у Потребителя включены файловые инструменты: `read_file` и `write_file` у `eva-notes` работают с Хранилищем, а не с каталогом скиллов. [PL-H-49](../sources.md), [PL-H-SKILL-VIEW-0.21.6](../sources.md)
 
 `skill_view` только загружает текст; выбор и исполнение сценария остаются за моделью. Markdown skill не даёт инструментов: доступны toolsets из конфигурации Hermes. [PL-H-49](../sources.md), [PL-H-4](../sources.md)
 
 ## Frontmatter
 
-У скиллов JediKit `name` и `description`; у навигатора `jedikit` ещё `metadata.hermes.config` с объявлением ключей предпочтений. Native reader понимает вложенный `metadata.hermes`. [PL-H-SKILL-CONFIG-0.21.6](../sources.md)
+У скиллов Eva `name` и `description`; у навигатора `eva` ещё `metadata.hermes.config` с объявлением ключей предпочтений. Native reader понимает вложенный `metadata.hermes`. [PL-H-SKILL-CONFIG-0.21.6](../sources.md)
 
 Native reader терпим к ошибкам: невалидный YAML разбирается построчно как `key: value`, отсутствие fences даёт пустой frontmatter, catalog берёт имя каталога и описание из тела. Поэтому успешное появление скилла в списке не доказывает валидный YAML. [PL-H-SKILL-CONFIG-0.21.6](../sources.md), [PL-H-SKILL-VIEW-0.21.6](../sources.md)
 
-`metadata.hermes.config` сам не включает фильтры зависимостей. `requires_toolsets`/`requires_tools` JediKit не использует: они сравниваются с eager-набором инструментов, а при включённом Tool Search отложенные MCP в него не входят, и исправный скилл может исчезнуть из индекса (вывод из source, не воспроизведён). Имена MCP toolsets — `mcp-<server>`. [PL-H-51](../sources.md), [PL-H-50](../sources.md), [PL-H-52](../sources.md), [PL-H-53](../sources.md), [PL-H-54](../sources.md)
+`metadata.hermes.config` сам не включает фильтры зависимостей. `requires_toolsets`/`requires_tools` Eva не использует: они сравниваются с eager-набором инструментов, а при включённом Tool Search отложенные MCP в него не входят, и исправный скилл может исчезнуть из индекса (вывод из source, не воспроизведён). Имена MCP toolsets — `mcp-<server>`. [PL-H-51](../sources.md), [PL-H-50](../sources.md), [PL-H-52](../sources.md), [PL-H-53](../sources.md), [PL-H-54](../sources.md)
 
 Индекс показывает `- имя: описание`, где описание усечено до первых 57 символов и `...`; полный `SKILL.md` не загружается. Поэтому начало `description` должно различать шесть скиллов. `skills_list` читает metadata из первых 4000 символов файла. Качество выбора скилла моделью не измерялось. [PL-H-50](../sources.md), [PL-H-51](../sources.md), [PL-H-49](../sources.md)
 
@@ -61,16 +61,16 @@ Native reader терпим к ошибкам: невалидный YAML разб
 
 `metadata.hermes.config` — список объектов (одиночный объект превращается в список). Обязательны непустые `key` и `description`; повторный ключ пропускается, сохраняется первый; `default` переносится, если не `null`; `prompt` по умолчанию равен `description`. Типы значений не валидируются: это описание, а не JSON Schema. [PL-H-SKILL-CONFIG-0.21.6](../sources.md)
 
-Ключ `jedikit.timezone` ищется по вложенному пути `skills.config.jedikit.timezone`; литеральный YAML-ключ с точкой этому не равен, индексация списков (`key.0`) не реализована. Список или словарь допустим как значение конечного пути. `$VAR` и `~` раскрываются у строкового значения и default, но не внутри списков. Необъявленные ключи в блок не попадают. [PL-H-SKILL-CONFIG-0.21.6](../sources.md)
+Ключ `eva.timezone` ищется по вложенному пути `skills.config.eva.timezone`; литеральный YAML-ключ с точкой этому не равен, индексация списков (`key.0`) не реализована. Список или словарь допустим как значение конечного пути. `$VAR` и `~` раскрываются у строкового значения и default, но не внутри списков. Необъявленные ключи в блок не попадают. [PL-H-SKILL-CONFIG-0.21.6](../sources.md)
 
 ```yaml
 skills:
   external_dirs:
-    - /nix/store/EXAMPLE-jedikit/skills
+    - /nix/store/EXAMPLE-eva/skills
   auto_load:
-    - jedikit
+    - eva
   config:
-    jedikit:
+    eva:
       timezone: Europe/Moscow
       tasks:
         workdays: [mon, tue, wed, thu, fri]
@@ -84,9 +84,9 @@ skills:
 
 ```text
 [Skill config (from ~/.hermes/config.yaml):
-  jedikit.timezone = Europe/Moscow
-  jedikit.tasks.workdays = ['mon', 'tue', 'wed', 'thu', 'fri']
-  jedikit.calendar.gap_minutes = (not set)
+  eva.timezone = Europe/Moscow
+  eva.tasks.workdays = ['mon', 'tue', 'wed', 'thu', 'fri']
+  eva.calendar.gap_minutes = (not set)
 ]
 ```
 
@@ -102,11 +102,11 @@ Resolver читает **сырой профильный `config.yaml`** (`get_co
 | --- | --- | --- |
 | Индекс system prompt, `skills_list` | Нет: имя и описание | [PL-H-AUTOLOAD-0.21.6](../sources.md), [PL-H-SKILL-VIEW-0.21.6](../sources.md) |
 | `skill_view(name)` и `skill_view(name, file_path=…)` | **Нет.** В raw frontmatter видны объявления и defaults, но не значения | [PL-H-SKILL-VIEW-0.21.6](../sources.md) |
-| Slash `/jedikit`, preload `hermes chat --skills` | Да, в activation message | [PL-H-SKILL-INJECT-0.21.6](../sources.md) |
+| Slash `/eva`, preload `hermes chat --skills` | Да, в activation message | [PL-H-SKILL-INJECT-0.21.6](../sources.md) |
 | `skills.auto_load` | Да: полный скилл и блок в system context, включая Telegram | [PL-H-SKILL-INJECT-0.21.6](../sources.md), [PL-H-AUTOLOAD-0.21.6](../sources.md) |
 | Cron `skills: [...]` | Да: scheduler после `skill_view` сам добавляет блок | [PL-H-CRON-SKILLS-0.21.6](../sources.md) |
 
-Поэтому носитель предпочтений — навигатор `jedikit` в `skills.auto_load`: значения всегда в контексте, а провайдерные скиллы, загруженные через `skill_view`, читают их из этого блока ([ADR 0017](../../docs/adr/0017-declarative-preferences.md)). Auto-load не применяется без skills tools, при `skip_context_files` или `HERMES_IGNORE_RULES`, поэтому он не заменяет явный `jedikit` в `skills` задания cron. Отдельный `auto_skill` канала или темы вставляет активацию в user message новой conversation — это другой механизм. [PL-H-AUTOLOAD-0.21.6](../sources.md), [PL-H-AGENT-CACHE-0.21.6](../sources.md)
+Поэтому носитель предпочтений — навигатор `eva` в `skills.auto_load`: значения всегда в контексте, а провайдерные скиллы, загруженные через `skill_view`, читают их из этого блока ([ADR 0017](../../docs/adr/0017-declarative-preferences.md)). Auto-load не применяется без skills tools, при `skip_context_files` или `HERMES_IGNORE_RULES`, поэтому он не заменяет явный `eva` в `skills` задания cron. Отдельный `auto_skill` канала или темы вставляет активацию в user message новой conversation — это другой механизм. [PL-H-AUTOLOAD-0.21.6](../sources.md), [PL-H-AGENT-CACHE-0.21.6](../sources.md)
 
 Документация того же commit говорит о подстановке «when a skill loads» и предлагает `hermes skills config <name>` для значений; source шире не подтверждает: обычный `skill_view` блока не добавляет, а `hermes skills config` — TUI включения и отключения скиллов. Значения задаются в `config.yaml` или `hermes config set skills.config.<key>`. [PL-H-SKILL-DOCS-0.21.6](../sources.md), [PL-H-CONFIG-WRITERS-0.21.6](../sources.md)
 
@@ -128,11 +128,11 @@ Resolver читает **сырой профильный `config.yaml`** (`get_co
 
 Чтение 0.21.5. Callable name — `mcp__<server>__<tool>`, где любой символ вне `[A-Za-z0-9_]`, включая `-`, заменён на `_`; длинное имя ограничивается 64 символами с hash suffix. Например, `get-event` на `google_calendar` — `mcp__google_calendar__get_event`. Базовые имена в `tools.json` менять не нужно. [PL-H-46](../sources.md)
 
-У сервера с `trust=untrusted` Hermes сам запрашивает approval на вызов инструмента без `readOnlyHint=true`; это может затронуть и чтения без annotation. Host approval не заменяет согласие по правилам JediKit, и наоборот. [PL-H-47](../sources.md)
+У сервера с `trust=untrusted` Hermes сам запрашивает approval на вызов инструмента без `readOnlyHint=true`; это может затронуть и чтения без annotation. Host approval не заменяет согласие по правилам Eva, и наоборот. [PL-H-47](../sources.md)
 
 При включённом Tool Search schemas MCP отложены: отсутствие инструмента в видимом списке не означает его отсутствия. Путь — `tool_search(queries=[...])` → `tool_describe(names=[...])` → `tool_call(calls=[{name, arguments}])`; schemas можно получить группой, но для MCP в `calls` допускается один элемент. Текущая web-страница описывает несколько local calls иначе; pin однозначен. Tool Search сохраняет approvals исходного инструмента. [PL-H-54](../sources.md)
 
-Пакет JediKit MCP не объявляет; подключения, trust и OAuth — native конфигурация Hermes у Потребителя. Native конфигурация поддерживает `auth: oauth`; effective config и рабочая OAuth-сессия — разные утверждения. [PL-H-14](../sources.md), [PL-H-18](../sources.md)
+Пакет Eva MCP не объявляет; подключения, trust и OAuth — native конфигурация Hermes у Потребителя. Native конфигурация поддерживает `auth: oauth`; effective config и рабочая OAuth-сессия — разные утверждения. [PL-H-14](../sources.md), [PL-H-18](../sources.md)
 
 Фильтр `tools.include`/`tools.exclude` (срез 0.20.6, 2026-09-13): include — allowlist имён и globs с приоритетом над exclude; пустой `include: []` не регистрирует инструменты. Denylist или широкий glob могут пропустить будущий write-tool; фильтр хоста не отзывает OAuth scope сервера. [PL-H-36](../sources.md)
 
@@ -140,7 +140,7 @@ Resolver читает **сырой профильный `config.yaml`** (`get_co
 
 Чтение 0.21.5. Схема: `questions:[{question, choices?, multi_select?}]`, 1–5 вопросов, до 4 вариантов; первый вариант помечается рекомендованным, UI добавляет «Other». Без `choices` ответ свободный. Ответ — `responses[]`; timeout, skip и недоставка не являются ответом. Timeout по умолчанию 3600 с. В Telegram пакет вопросов приходит отдельными последовательными карточками, полноценного multi-select нет. [PL-H-55](../sources.md)
 
-Отсюда канал JediKit: все блокирующие пробелы — один вопрос без `choices` со всем списком, чтобы сохранить «одним сообщением» ADR 0013; одиночное предложение, общий Preview и подтверждение безвозвратной потери Habitify — одна карточка «Да»/«Нет» после полного текста. Порядок вариантов: «Да», «Нет»; для подтверждения потерь Habitify — «Нет», «Да», чтобы рекомендованным не стало удаление. Это продуктовая интерпретация, не security approval. В cron `clarify` недоступен. [PL-H-55](../sources.md), [PL-H-66](../sources.md)
+Отсюда канал Eva: все блокирующие пробелы — один вопрос без `choices` со всем списком, чтобы сохранить «одним сообщением» ADR 0013; одиночное предложение, общий Preview и подтверждение безвозвратной потери Habitify — одна карточка «Да»/«Нет» после полного текста. Порядок вариантов: «Да», «Нет»; для подтверждения потерь Habitify — «Нет», «Да», чтобы рекомендованным не стало удаление. Это продуктовая интерпретация, не security approval. В cron `clarify` недоступен. [PL-H-55](../sources.md), [PL-H-66](../sources.md)
 
 ## `memory`
 
@@ -148,11 +148,11 @@ Resolver читает **сырой профильный `config.yaml`** (`get_co
 
 При `memory.write_approval=true` foreground пытается получить approval сразу, без callback и в фоне запись ставится в очередь: `staged:true`, `pending_id`, `/memory pending`, `/memory approve <id>`. Применённая запись возвращает `done:true` с `usage` и `entry_count`, без содержимого. `done:true` — ответ инструмента о применении, не независимое чтение. [PL-H-56](../sources.md), [PL-H-31](../sources.md)
 
-Описание `memory` в 0.21.5 советует хранить предпочтения «для вида работы» в скилле через `skill_manage`. Датированное наблюдение 2026-10-08: на хосте владельца setup `jedikit-calendar` по этой подсказке создал ожидающие изменения файлов скилла вместо записи в память, хотя скиллы подключены из `/nix/store`. В JediKit `memory` хранит только пометки объектов провайдеров, предпочтения задаёт Потребитель в `skills.config`, и скиллы не пишут настройки ни через `memory`, ни через `skill_manage` ([ADR 0006](../../docs/adr/0006-memory-holds-object-marks.md), [ADR 0017](../../docs/adr/0017-declarative-preferences.md)). В Telegram `/skills` управляет ожидающими записями скиллов, а не каталогом. [PL-H-MEMORY-0.21.5](../sources.md), [CLANWRIGHT-SETUP-2026-10-08](../sources.md), [PL-H-65](../sources.md)
+Описание `memory` в 0.21.5 советует хранить предпочтения «для вида работы» в скилле через `skill_manage`. Датированное наблюдение 2026-10-08: на хосте владельца setup `eva-calendar` по этой подсказке создал ожидающие изменения файлов скилла вместо записи в память, хотя скиллы подключены из `/nix/store`. В Eva `memory` хранит только пометки объектов провайдеров, предпочтения задаёт Потребитель в `skills.config`, и скиллы не пишут настройки ни через `memory`, ни через `skill_manage` ([ADR 0006](../../docs/adr/0006-memory-holds-object-marks.md), [ADR 0017](../../docs/adr/0017-declarative-preferences.md)). В Telegram `/skills` управляет ожидающими записями скиллов, а не каталогом. [PL-H-MEMORY-0.21.5](../sources.md), [CLANWRIGHT-SETUP-2026-10-08](../sources.md), [PL-H-65](../sources.md)
 
 ## Cron
 
-Приглашения JediKit — задания cron, которые создаёт и сопровождает Потребитель; скиллы задания не создают и не меняют ([ADR 0017](../../docs/adr/0017-declarative-preferences.md), [ADR 0003](../../docs/adr/0003-no-unattended-writes.md)). Синтаксис расписания для приглашений (`#`, «или» дня месяца и дня недели, `[SILENT]`) разобран в [досье setup, §6](../setup.md#6-cron-hermes-v0216).
+Приглашения Eva — задания cron, которые создаёт и сопровождает Потребитель; скиллы задания не создают и не меняют ([ADR 0017](../../docs/adr/0017-declarative-preferences.md), [ADR 0003](../../docs/adr/0003-no-unattended-writes.md)). Синтаксис расписания для приглашений (`#`, «или» дня месяца и дня недели, `[SILENT]`) разобран в [досье setup, §6](../setup.md#6-cron-hermes-v0216).
 
 ### Управление и хранилище
 
@@ -164,7 +164,7 @@ Blueprint skills (`metadata.hermes.blueprint`), каталог Automation Bluepr
 
 ### Скиллы задания
 
-`skills` задания — голые имена, например `[jedikit, jedikit-tasks]`. Scheduler загружает их через `skill_view` и сам добавляет блок значений `skills.config`; отсутствующий или неоднозначный скилл пропускается с notice, поэтому успешное задание не доказывает загрузку всех скиллов. Вызов соседнего `skill_view` внутри задания блока не добавляет, поэтому задание, которому нужны предпочтения, прикрепляет `jedikit` явно. [PL-H-CRON-SKILLS-0.21.6](../sources.md), [PL-H-SKILL-VIEW-0.21.6](../sources.md)
+`skills` задания — голые имена, например `[eva, eva-tasks]`. Scheduler загружает их через `skill_view` и сам добавляет блок значений `skills.config`; отсутствующий или неоднозначный скилл пропускается с notice, поэтому успешное задание не доказывает загрузку всех скиллов. Вызов соседнего `skill_view` внутри задания блока не добавляет, поэтому задание, которому нужны предпочтения, прикрепляет `eva` явно. [PL-H-CRON-SKILLS-0.21.6](../sources.md), [PL-H-SKILL-VIEW-0.21.6](../sources.md)
 
 ### Доставка
 
@@ -195,36 +195,36 @@ Blueprint skills (`metadata.hermes.blueprint`), каталог Automation Bluepr
 - `todo_list`: список `{id, content, status}` до 256 элементов, вызов без аргументов читает. Подходит для шагов агента в длинном обзоре, не для задач пользователя. [PL-H-59](../sources.md)
 - `session_search`: поиск и чтение прошлых сессий с ограниченным окном. Найденное — контекст разговора, а не актуальное состояние провайдера. [PL-H-62](../sources.md)
 - `send_message` модели не зарегистрирован; фоновые уведомления — доставка cron. [PL-H-60](../sources.md)
-- `delegate_task` у владельца выключен, а дочерним агентам недоступны `clarify`, `memory` и `cronjob`; соседний скилл JediKit загружается в той же сессии. [PL-H-61](../sources.md), [PL-H-66](../sources.md)
+- `delegate_task` у владельца выключен, а дочерним агентам недоступны `clarify`, `memory` и `cronjob`; соседний скилл Eva загружается в той же сессии. [PL-H-61](../sources.md), [PL-H-66](../sources.md)
 
-Local terminal (срез 0.20.6) работает от пользователя ОС и не является sandbox; фильтрация окружения terminal, `execute_code` и MCP различается. [PL-H-37](../sources.md), [PL-H-39](../sources.md) Из скиллов JediKit `terminal` нужен только `jedikit-notes` — для `sha256` и перемещения файлов в Хранилище, в песочнице Потребителя (см. «Файлы, terminal и песочница»).
+Local terminal (срез 0.20.6) работает от пользователя ОС и не является sandbox; фильтрация окружения terminal, `execute_code` и MCP различается. [PL-H-37](../sources.md), [PL-H-39](../sources.md) Из скиллов Eva `terminal` нужен только `eva-notes` — для `sha256` и перемещения файлов в Хранилище, в песочнице Потребителя (см. «Файлы, terminal и песочница»).
 
 ## Встроенные скиллы `llm-wiki` и `obsidian`
 
-`jedikit-notes` надстраивается над двумя скиллами, которые поставляются с Hermes ([ADR 0018](../../docs/adr/0018-notes-over-llm-wiki.md)). Оба — только текст инструкций, без кода, `references/` и `scripts/`; оба под MIT. [PL-H-LLM-WIKI-0.21.6](../sources.md), [PL-H-OBSIDIAN-SKILL-0.21.6](../sources.md)
+`eva-notes` надстраивается над двумя скиллами, которые поставляются с Hermes ([ADR 0018](../../docs/adr/0018-notes-over-llm-wiki.md)). Оба — только текст инструкций, без кода, `references/` и `scripts/`; оба под MIT. [PL-H-LLM-WIKI-0.21.6](../sources.md), [PL-H-OBSIDIAN-SKILL-0.21.6](../sources.md)
 
 | Скилл | Что даёт | Основание |
 | --- | --- | --- |
 | `llm-wiki` 2.1.0 | Структура `raw/`, `entities/`, `concepts/`, `comparisons/`, `queries/`, `_archive/` и `SCHEMA.md`, `index.md`, `log.md`; путь из `WIKI_PATH`; ingest, query, lint; wiki frontmatter из шести полей и raw-схема `source_url`/`ingested`/`sha256`; пороги — сущность при двух источниках или центральности, минимум две ссылки у страницы, подтверждение ingest на 10+ существующих страниц; ценные ответы сохраняются в `queries/` или `comparisons/` | [PL-H-LLM-WIKI-0.21.6](../sources.md) |
 | `obsidian` 1.0.0 | Работа с хранилищем файловыми инструментами: путь из `OBSIDIAN_VAULT_PATH` (fallback `~/Documents/Obsidian Vault`), абсолютные пути без переменных, `terminal` — только чтобы определить путь; чтение, поиск, запись, wikilinks | [PL-H-OBSIDIAN-SKILL-0.21.6](../sources.md) |
 
-Русские имена папок, несколько корней сырья и правила JediKit основа не описывает; `jedikit-notes` переопределяет её текстом и явно загружает `skill_view(name="llm-wiki")` и `skill_view(name="obsidian")`. Кодом соблюдение переопределений никто не проверяет. `related_skills` возвращается как metadata ответа `skill_view` и зависимостей не загружает; выключенный скилл `skill_view` не загружает, поэтому Потребитель включает `llm-wiki` и `obsidian` вместе с `jedikit-notes`. [PL-H-SKILL-DEPS-0.21.6](../sources.md)
+Русские имена папок, несколько корней сырья и правила Eva основа не описывает; `eva-notes` переопределяет её текстом и явно загружает `skill_view(name="llm-wiki")` и `skill_view(name="obsidian")`. Кодом соблюдение переопределений никто не проверяет. `related_skills` возвращается как metadata ответа `skill_view` и зависимостей не загружает; выключенный скилл `skill_view` не загружает, поэтому Потребитель включает `llm-wiki` и `obsidian` вместе с `eva-notes`. [PL-H-SKILL-DEPS-0.21.6](../sources.md)
 
-`AGENTS.md` внутри Хранилища Hermes сам не читает: context files он берёт из рабочего каталога на хосте, а не из песочницы, поэтому `jedikit-notes` читает `SCHEMA.md` и `AGENTS.md` Хранилища явно. Это чтение clanwright; в рамках этого досье source context files для v0.21.6 не перечитывался (см. [PL-H-CONTEXT-CHANNELS-0.21.6](../sources.md)). [CLANWRIGHT-NOTES-HANDOFF-2026-10-11](../sources.md)
+`AGENTS.md` внутри Хранилища Hermes сам не читает: context files он берёт из рабочего каталога на хосте, а не из песочницы, поэтому `eva-notes` читает `SCHEMA.md` и `AGENTS.md` Хранилища явно. Это чтение clanwright; в рамках этого досье source context files для v0.21.6 не перечитывался (см. [PL-H-CONTEXT-CHANNELS-0.21.6](../sources.md)). [CLANWRIGHT-NOTES-HANDOFF-2026-10-11](../sources.md)
 
 ## Файлы, terminal и песочница
 
-Инструменты `jedikit-notes` и их toolsets на v0.21.6: `read_file`, `write_file`, `patch`, `search_files` — `file`; `terminal` — `terminal`; `web_search`, `web_extract` — `web`; `skills_list`, `skill_view` — `skills`; `clarify` — `clarify`. В `tools.json` встроенные инструменты указываются ключом `toolset` вместо `server`. [PL-H-TOOLSETS-0.21.6](../sources.md)
+Инструменты `eva-notes` и их toolsets на v0.21.6: `read_file`, `write_file`, `patch`, `search_files` — `file`; `terminal` — `terminal`; `web_search`, `web_extract` — `web`; `skills_list`, `skill_view` — `skills`; `clarify` — `clarify`. В `tools.json` встроенные инструменты указываются ключом `toolset` вместо `server`. [PL-H-TOOLSETS-0.21.6](../sources.md)
 
 **Чтение source.** Для backend docker каталоги кэша Hermes (`cache/documents`, `cache/images`, `cache/web` и другие) монтируются в контейнер под `/root/.hermes/…` флагом `:ro`, только на чтение; сетевой режим контейнера задаётся параметром `network` и `docker_extra_args`. [PL-H-SANDBOX-MOUNTS-0.21.6](../sources.md) Переменные окружения хоста в контейнер сами не попадают: их передают `terminal.docker_forward_env` (имена) или `terminal.docker_env` (пары имя–значение), поэтому `printenv WIKI_PATH` в песочнице видит значение, только если Потребитель его передал и задал путём внутри контейнера ([config_defaults.py L352–356](https://github.com/NousResearch/hermes-agent/blob/818c13be1dc4fd28987e1e881a9408224afd4535/hermes_cli/config_defaults.py#L352-L356), [docker.py L53–83](https://github.com/NousResearch/hermes-agent/blob/818c13be1dc4fd28987e1e881a9408224afd4535/tools/environments/docker.py#L53-L83), прочитано 2026-10-11).
 
-**Чтение source: защищённые инструкционные файлы.** `write_file` и `patch` перед записью вызывают `_check_protected_instruction_write`: basename `AGENTS.md`, `CLAUDE.md`, `SOUL.md` или `.cursorrules` в любом каталоге, без учёта регистра и после realpath, требует approval человека; `--yolo` и allowlist его не снимают, без канала к человеку запись отклоняется, timeout — отказ, а текст отказа велит не повторять запись через `terminal`. Включено по умолчанию: `security.protected_instruction_files: true` ([file_tools_write_guards.py L175–189, L259–278, L345–355](https://github.com/NousResearch/hermes-agent/blob/818c13be1dc4fd28987e1e881a9408224afd4535/tools/file_tools_write_guards.py#L175-L189), [file_tools.py L788, L875](https://github.com/NousResearch/hermes-agent/blob/818c13be1dc4fd28987e1e881a9408224afd4535/tools/file_tools.py#L788), [config_defaults.py L1787](https://github.com/NousResearch/hermes-agent/blob/818c13be1dc4fd28987e1e881a9408224afd4535/hermes_cli/config_defaults.py#L1787), прочитано 2026-10-11). Поэтому каждая запись `jedikit-notes` в `AGENTS.md` Хранилища, включая его первичное создание, проходит approval Hermes. Описание `write_file` сообщает `verified:true` и просит не перечитывать файл ([file_tools.py L1176](https://github.com/NousResearch/hermes-agent/blob/818c13be1dc4fd28987e1e881a9408224afd4535/tools/file_tools.py#L1176)); `jedikit-notes` всё равно проверяет запись `read_file`, сверяя путь, frontmatter и фрагмент с разрешённым. Живой approval в Telegram не проверялся.
+**Чтение source: защищённые инструкционные файлы.** `write_file` и `patch` перед записью вызывают `_check_protected_instruction_write`: basename `AGENTS.md`, `CLAUDE.md`, `SOUL.md` или `.cursorrules` в любом каталоге, без учёта регистра и после realpath, требует approval человека; `--yolo` и allowlist его не снимают, без канала к человеку запись отклоняется, timeout — отказ, а текст отказа велит не повторять запись через `terminal`. Включено по умолчанию: `security.protected_instruction_files: true` ([file_tools_write_guards.py L175–189, L259–278, L345–355](https://github.com/NousResearch/hermes-agent/blob/818c13be1dc4fd28987e1e881a9408224afd4535/tools/file_tools_write_guards.py#L175-L189), [file_tools.py L788, L875](https://github.com/NousResearch/hermes-agent/blob/818c13be1dc4fd28987e1e881a9408224afd4535/tools/file_tools.py#L788), [config_defaults.py L1787](https://github.com/NousResearch/hermes-agent/blob/818c13be1dc4fd28987e1e881a9408224afd4535/hermes_cli/config_defaults.py#L1787), прочитано 2026-10-11). Поэтому каждая запись `eva-notes` в `AGENTS.md` Хранилища, включая его первичное создание, проходит approval Hermes. Описание `write_file` сообщает `verified:true` и просит не перечитывать файл ([file_tools.py L1176](https://github.com/NousResearch/hermes-agent/blob/818c13be1dc4fd28987e1e881a9408224afd4535/tools/file_tools.py#L1176)); `eva-notes` всё равно проверяет запись `read_file`, сверяя путь, frontmatter и фрагмент с разрешённым. Живой approval в Telegram не проверялся.
 
 **Декларация Потребителя** (handoff clanwright, не проверенный deployment): `terminal`, `file` и `execute_code` исполняются в одноразовом Docker без сети; Хранилище смонтировано на запись, `.obsidian/` и `.livesync/` — только на чтение; `WIKI_PATH` и `OBSIDIAN_VAULT_PATH` указывают на корень Хранилища; в образе bash, coreutils, `rg`, `jq`, diff/patch, Python с pypdf и pdfplumber, Poppler, Tesseract RU/EN, OCRmyPDF, tzdata; Node, curl, git нет, установка во время работы невозможна. Монтирование Хранилища, синхронизация LiveSync и Git окружения — у Потребителя ([ADR 0016](../../docs/adr/0016-consumer-boundary.md)). [CLANWRIGHT-NOTES-HANDOFF-2026-10-11](../sources.md)
 
 ## `web_extract` и вложения Telegram
 
-**Чтение source.** `web_extract` исполняет сам Hermes, вне песочницы. Модель получает до `web.extract_char_limit` — по умолчанию 15 000 символов: около 75% начала и 25% конца с пометкой `[TRUNCATED]` и путём к полному тексту. `web.extract_char_limit` задаёт Потребитель в пределах 2 000–500 000. Полный текст до 2 000 000 символов пишется в `cache/web` под именем из хоста и hash URL и перезаписывается при повторном извлечении того же URL, поэтому копировать его нужно сразу. Более длинная копия обрезается, и пометка `[... stored copy truncated at …]` дописывается в конец самого файла кэша, а не в ответ модели ([web_tools_truncate.py L59–81](https://github.com/NousResearch/hermes-agent/blob/818c13be1dc4fd28987e1e881a9408224afd4535/tools/web_tools_truncate.py#L59-L81), прочитано 2026-10-11): `jedikit-notes` проверяет хвост файла перед копированием. В песочнице docker путь — `/root/.hermes/cache/web/`, только на чтение. [PL-H-WEB-EXTRACT-0.21.6](../sources.md), [PL-H-SANDBOX-MOUNTS-0.21.6](../sources.md)
+**Чтение source.** `web_extract` исполняет сам Hermes, вне песочницы. Модель получает до `web.extract_char_limit` — по умолчанию 15 000 символов: около 75% начала и 25% конца с пометкой `[TRUNCATED]` и путём к полному тексту. `web.extract_char_limit` задаёт Потребитель в пределах 2 000–500 000. Полный текст до 2 000 000 символов пишется в `cache/web` под именем из хоста и hash URL и перезаписывается при повторном извлечении того же URL, поэтому копировать его нужно сразу. Более длинная копия обрезается, и пометка `[... stored copy truncated at …]` дописывается в конец самого файла кэша, а не в ответ модели ([web_tools_truncate.py L59–81](https://github.com/NousResearch/hermes-agent/blob/818c13be1dc4fd28987e1e881a9408224afd4535/tools/web_tools_truncate.py#L59-L81), прочитано 2026-10-11): `eva-notes` проверяет хвост файла перед копированием. В песочнице docker путь — `/root/.hermes/cache/web/`, только на чтение. [PL-H-WEB-EXTRACT-0.21.6](../sources.md), [PL-H-SANDBOX-MOUNTS-0.21.6](../sources.md)
 
 Фото и документы gateway кладёт в `cache/images` и `cache/documents`; в песочнице они видны только на чтение. `agent.image_input_mode: native` передаёт картинки модели напрямую. [PL-H-GATEWAY-MEDIA-0.21.6](../sources.md), [PL-H-SANDBOX-MOUNTS-0.21.6](../sources.md)
 
@@ -244,17 +244,17 @@ Local terminal (срез 0.20.6) работает от пользователя 
 
 `tools.skills_guard.scan_skill` и `tools.skill_linter` — внутренние Python API без CLI entrypoint; строгая проверка frontmatter принадлежит пути записи `skill_manage`. Вызов этих функций собственным wrapper противоречит [ADR 0004](../../docs/adr/0004-no-custom-code.md). Native reader терпим к невалидному YAML, поэтому даже успешный `skills list` не доказывает валидный frontmatter. [PL-H-SKILLS-CLI-0.21.6](../sources.md), [PL-H-SKILL-CONFIG-0.21.6](../sources.md)
 
-Следствие ([ADR 0017](../../docs/adr/0017-declarative-preferences.md)): CI JediKit проверяет `git diff --check` (пробелы во всём дереве HEAD), остальное — независимое ревью; валидность frontmatter, security scan и discovery до появления штатной проверки Hermes автоматически не проверяются.
+Следствие ([ADR 0017](../../docs/adr/0017-declarative-preferences.md)): CI Eva проверяет `git diff --check` (пробелы во всём дереве HEAD), остальное — независимое ревью; валидность frontmatter, security scan и discovery до появления штатной проверки Hermes автоматически не проверяются.
 
 ## Конфигурация владельца
 
-Датированное наблюдение: clanwright HEAD `6641f66d74a1877f4c28f98bf9589af648a85d4c`, прочитан 2026-10-08; JediKit там закреплён на `v0.4.0` (`647b0d1`). Это декларация до перехода на `skills.config` и до `jedikit-notes`, не проверка deployment. Окружение `jedikit-notes` по handoff 2026-10-11 описано в разделе «Файлы, terminal и песочница». [PL-H-66](../sources.md)
+Датированное наблюдение: clanwright HEAD `6641f66d74a1877f4c28f98bf9589af648a85d4c`, прочитан 2026-10-08; Eva там закреплён на `v0.4.0` (`647b0d1`). Это декларация до перехода на `skills.config` и до `eva-notes`, не проверка deployment. Окружение `eva-notes` по handoff 2026-10-11 описано в разделе «Файлы, terminal и песочница». [PL-H-66](../sources.md)
 
-- JediKit подключён через `skills.external_dirs` из Nix store; plugin registry не используется. Hermes закреплён на `f97608f`. Nix-модули Hermes официально имеют уровень поддержки Tier 2 best effort. [PL-H-7](../sources.md)
-- MCP: `singularity` — официальный hosted MCP с OAuth и `trust=untrusted`; `habitify_read`, `habitify`, `google_calendar` — локальные адаптеры с `trust=full`. Sampling, elicitation, resources и prompts выключены. Включены 35 инструментов Singularity, 7 чтений и 16 записей Habitify; allowlist Calendar берётся из `tools.json` JediKit.
+- Eva подключён через `skills.external_dirs` из Nix store; plugin registry не используется. Hermes закреплён на `f97608f`. Nix-модули Hermes официально имеют уровень поддержки Tier 2 best effort. [PL-H-7](../sources.md)
+- MCP: `singularity` — официальный hosted MCP с OAuth и `trust=untrusted`; `habitify_read`, `habitify`, `google_calendar` — локальные адаптеры с `trust=full`. Sampling, elicitation, resources и prompts выключены. Включены 35 инструментов Singularity, 7 чтений и 16 записей Habitify; allowlist Calendar берётся из `tools.json` Eva.
 - Toolsets Telegram: `clarify`, `todo`, `memory`, `session_search`, `web`, `search`, `skills`, `mcp-singularity`, `mcp-habitify`, `mcp-habitify_read`, `mcp-google_calendar`, с cron — `cronjob`. Tool Search включён.
-- Фоновые toolsets: `web`, `skills`, `mcp-habitify_read`, `memory` — без Singularity и Calendar, поэтому фоновая утренняя сводка задач и календаря по ним невозможна. Задания и их toolsets заводит Потребитель; скиллы JediKit их не создают.
-- Cron включён, timezone `Europe/Moscow`; `memory.write_approval=true`, `skills.write_approval=true`, `approvals.mode=manual`. Terminal, file, code execution, delegation, browser на 2026-10-08 выключены; для `jedikit-notes` Потребитель объявил `file`, `terminal` и `execute_code` в песочнице Docker.
+- Фоновые toolsets: `web`, `skills`, `mcp-habitify_read`, `memory` — без Singularity и Calendar, поэтому фоновая утренняя сводка задач и календаря по ним невозможна. Задания и их toolsets заводит Потребитель; скиллы Eva их не создают.
+- Cron включён, timezone `Europe/Moscow`; `memory.write_approval=true`, `skills.write_approval=true`, `approvals.mode=manual`. Terminal, file, code execution, delegation, browser на 2026-10-08 выключены; для `eva-notes` Потребитель объявил `file`, `terminal` и `execute_code` в песочнице Docker.
 - `grill-me` поставляется из официальных optional skills закреплённого Hermes; фактический discovery не проверен.
 
 ## Ограничения доступа gateway
@@ -263,4 +263,4 @@ Local terminal (срез 0.20.6) работает от пользователя 
 
 ## Непроверенные слои
 
-Не проверены: установленная версия Hermes у Потребителя, подключение закреплённой ревизии через `external_dirs`, фактические имена скиллов, индекс и slash, появление блока `skills.config` в Telegram и cron, свежесть значений после перезапуска, поведение native writers с декларативным `config.yaml`, MCP discovery и OAuth, вызовы Tool Search, карточки `clarify` в Telegram, записи и approval `memory`, задания cron, timezone, запуск и доставка в тему, поведение модели и Read-back. Для `jedikit-notes` не проверены: включение `llm-wiki` и `obsidian`, соблюдение переопределений моделью, песочница Docker без сети и монтирование Хранилища, доступ к `/root/.hermes/cache/web/` и вложениям, `web_extract` и его провайдер, запись в Хранилище и проверка `read_file`, синхронизация LiveSync. Source и статические проверки эти результаты не подтверждают. Аккаунты и данные провайдеров этой работой не затрагивались.
+Не проверены: установленная версия Hermes у Потребителя, подключение закреплённой ревизии через `external_dirs`, фактические имена скиллов, индекс и slash, появление блока `skills.config` в Telegram и cron, свежесть значений после перезапуска, поведение native writers с декларативным `config.yaml`, MCP discovery и OAuth, вызовы Tool Search, карточки `clarify` в Telegram, записи и approval `memory`, задания cron, timezone, запуск и доставка в тему, поведение модели и Read-back. Для `eva-notes` не проверены: включение `llm-wiki` и `obsidian`, соблюдение переопределений моделью, песочница Docker без сети и монтирование Хранилища, доступ к `/root/.hermes/cache/web/` и вложениям, `web_extract` и его провайдер, запись в Хранилище и проверка `read_file`, синхронизация LiveSync. Source и статические проверки эти результаты не подтверждают. Аккаунты и данные провайдеров этой работой не затрагивались.

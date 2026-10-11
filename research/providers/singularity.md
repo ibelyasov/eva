@@ -1,6 +1,6 @@
 # SingularityApp: досье официального hosted MCP
 
-Дата исходного исследования: **2026-10-05**. **2026-10-06** повторно прочитана публичная MCP Wiki; остальные публичные источники сохраняют прежнюю дату доступа. Документ описывает контракт провайдера и границы его применения в JediKit. Возможность, заявленная поставщиком, наличие имени в каталоге и проверенное действие с данными — разные уровни доказательства.
+Дата исходного исследования: **2026-10-05**. **2026-10-06** повторно прочитана публичная MCP Wiki; остальные публичные источники сохраняют прежнюю дату доступа. Документ описывает контракт провайдера и границы его применения в Eva. Возможность, заявленная поставщиком, наличие имени в каталоге и проверенное действие с данными — разные уровни доказательства.
 
 ## Источники и границы доказательства
 
@@ -14,7 +14,7 @@
 
 Независимых испытаний действий с данными, benchmarks или независимых оценок надёжности в этом исследовании нет. Релевантные пользовательские anecdotes не использованы. Исторические metadata probes сохранены ниже и в [tools snapshot](singularity-tools-2026-08-09.md) и [prompts snapshot](singularity-prompts-2026-08-09.md); их наблюдения августа и документальная перепроверка сентября не являются текущим контрактом.
 
-Подключение предоставляет хост Hermes; обязательного ручного runtime-гейта нет ([ADR0005](../../docs/adr/0005-hermes-host-connections.md)). Используется только официальный hosted MCP, без REST fallback; исходные скиллы находятся в одном `skills/`. Собственный MCP, код и генераторы исключены ([ADR0004](../../docs/adr/0004-no-custom-code.md)). Это ограничения JediKit, а не обещания SingularityApp. Само это досье не устанавливает интеграцию и не доказывает совместимость с Hermes.
+Подключение предоставляет хост Hermes; обязательного ручного runtime-гейта нет ([ADR0005](../../docs/adr/0005-hermes-host-connections.md)). Используется только официальный hosted MCP, без REST fallback; исходные скиллы находятся в одном `skills/`. Собственный MCP, код и генераторы исключены ([ADR0004](../../docs/adr/0004-no-custom-code.md)). Это ограничения Eva, а не обещания SingularityApp. Само это досье не устанавливает интеграцию и не доказывает совместимость с Hermes.
 
 ## Подключение, доступ и отличие документации от discovery
 
@@ -32,7 +32,7 @@
 
 Wiki допускает URL parameter `toolsets`, например `?toolsets=tasks,projects`; это выбор групп, а не доказанный read-only permission scope. Точные OAuth scope strings и матрица scope → tool по этой странице неизвестны. OAuth discovery endpoints в этом исследовании не запрашивались. [SINGULARITY-MCP](../sources.md)
 
-Для операций из [контракта инструментов](https://github.com/ibelyasov/jedikit/blob/43fc19e/skills/jedikit-tasks/tools.json) применим набор `tasks,projects,meta,tags`: `https://mcp.singularity-app.com/mcp?toolsets=tasks,projects,meta,tags`. Наличие параметра и групп повторно подтверждено Wiki 2026-10-06. [Правила записи](https://github.com/ibelyasov/jedikit/blob/43fc19e/skills/jedikit-tasks/references/write-policy.md) исключают `habits`, `kanban`, `time_stat` и Batch; REST fallback отсутствует ([ADR0005](../../docs/adr/0005-hermes-host-connections.md)). Это настройка доступного каталога, не гарантия OAuth least privilege. Исторический Codex probe ниже обнаружил несовместимость query URL с protected-resource validation; Hermes с этим URL не проверен. При несовместимости остановить подключение и сообщить ограничение, а не молча расширять доступ.
+Для операций из [контракта инструментов](https://github.com/ibelyasov/eva/blob/43fc19e/skills/jedikit-tasks/tools.json) применим набор `tasks,projects,meta,tags`: `https://mcp.singularity-app.com/mcp?toolsets=tasks,projects,meta,tags`. Наличие параметра и групп повторно подтверждено Wiki 2026-10-06. [Правила записи](https://github.com/ibelyasov/eva/blob/43fc19e/skills/jedikit-tasks/references/write-policy.md) исключают `habits`, `kanban`, `time_stat` и Batch; REST fallback отсутствует ([ADR0005](../../docs/adr/0005-hermes-host-connections.md)). Это настройка доступного каталога, не гарантия OAuth least privilege. Исторический Codex probe ниже обнаружил несовместимость query URL с protected-resource validation; Hermes с этим URL не проверен. При несовместимости остановить подключение и сообщить ограничение, а не молча расширять доступ.
 
 Отсутствие delete tool в наблюдении — граница каталога, а не доказательство устройства всего сервиса. Продуктовый сценарий разобранных идей, справок и встреч использует подтверждённый пользователем `task_cancel`, а не delete ([ADR0008](../../docs/adr/0008-cancel-instead-of-delete.md)).
 
@@ -94,7 +94,7 @@ Server instructions, переданные ведущим 2026-10-05, требу�
 
 ## Что обещано, что неизвестно и как должен вести себя skill
 
-| Вопрос | Первичный источник на 2026-10-05 | Граница и правило JediKit (вывод) |
+| Вопрос | Первичный источник на 2026-10-05 | Граница и правило Eva (вывод) |
 | --- | --- | --- |
 | Undo / rollback | UI содержит Undo/Redo hotkeys. [SINGULARITY-MAC-SHORTCUTS](../sources.md) В переданном наборе нет undo tool. [SINGULARITY-DISCOVERY-2026-10-05](../sources.md) | Не обещать, что Cmd+Z отменит удалённую MCP запись. Uncomplete/unarchive — отдельные операции, не восстановление всего snapshot. До теста никаких гарантий rollback. |
 | Idempotency / повтор после timeout | MCP Wiki не публикует такой контракт; наблюдение не содержит annotations или idempotency keys. [SINGULARITY-MCP](../sources.md) [SINGULARITY-DISCOVERY-2026-10-05](../sources.md) | Успех мог произойти до потери ответа. Не повторять create/mutation вслепую; остановиться, по разрешённому чтению сверить состояние и явно сообщить неопределённость. |
@@ -108,7 +108,7 @@ Server instructions, переданные ведущим 2026-10-05, требу�
 
 ## Применение в скилле
 
-Следующие правила кратко описывают [сценарии скилла](https://github.com/ibelyasov/jedikit/blob/43fc19e/skills/jedikit-tasks/SKILL.md) и [политику записи](https://github.com/ibelyasov/jedikit/blob/43fc19e/skills/jedikit-tasks/references/write-policy.md), а не заявленную семантику provider. Термины структуры и потока задач определены в [CONTEXT.md](../../CONTEXT.md).
+Следующие правила кратко описывают [сценарии скилла](https://github.com/ibelyasov/eva/blob/43fc19e/skills/jedikit-tasks/SKILL.md) и [политику записи](https://github.com/ibelyasov/eva/blob/43fc19e/skills/jedikit-tasks/references/write-policy.md), а не заявленную семантику provider. Термины структуры и потока задач определены в [CONTEXT.md](../../CONTEXT.md).
 
 1. **Read-only review:** определить нужную сущность и минимальный разрешённый срез; получить IDs через проверенный list/get; обозначить неполноту, неизвестные filters и timezone. Не трактовать отсутствие объекта в неполной выдаче как отсутствие в аккаунте.
 2. **Capture:** записать сырую мысль во Inbox без предварительной классификации, не выдумывать проект, section, deadline или start. Проверить доступную schema перед построением вызова. Явную одиночную команду выполнить сразу; предложенное агентом изменение — после Preview и подтверждения; группа операций требует единого Preview и подтверждения. После записи нужен Read-back.
@@ -135,7 +135,7 @@ Server instructions, переданные ведущим 2026-10-05, требу�
 - project/section/subtask move и сохранение структуры; completion/cancel/complete_today/uncomplete с проверкой следующего дня и recurrence;
 - archive/unarchive task/project с проверкой nested objects, старых дат и настроек;
 - offset/day-boundary/DST, validation errors и неизвестный результат записи; повтор mutation — лишь если он отдельно разрешён;
-- группа согласованных последовательных операций с остановкой на первой ошибке; Batch не входит в scope JediKit.
+- группа согласованных последовательных операций с остановкой на первой ошибке; Batch не входит в scope Eva.
 
 Cleanup — тоже mutation. Archive не считать удалением, unarchive — полноценным undo. Permanent delete не включать в cleanup по умолчанию и не переходить на REST ради очистки. В артефактах хранить только обезличенные IDs/ожидания/результаты; tokens, OAuth URL с параметрами и private profile links не сохранять.
 
@@ -198,7 +198,7 @@ Cleanup — тоже mutation. Archive не считать удалением, u
 
 ## Дополнительный REST контекст: snapshot публичной схемы 2026-09-13
 
-Далее сохранены полезные точные operation IDs и DTO из прежнего публичного чтения, **не перепроверенные 2026-10-06**. Тогда схема содержала 64 operations; это исторический count. REST использует Bearer rest-token из account dashboard, отдельно от MCP OAuth; JediKit REST не вызывает. [SINGULARITY-OPENAPI](../sources.md), [SINGULARITY-ACCOUNT-DASHBOARD](../sources.md)
+Далее сохранены полезные точные operation IDs и DTO из прежнего публичного чтения, **не перепроверенные 2026-10-06**. Тогда схема содержала 64 operations; это исторический count. REST использует Bearer rest-token из account dashboard, отдельно от MCP OAuth; Eva REST не вызывает. [SINGULARITY-OPENAPI](../sources.md), [SINGULARITY-ACCOUNT-DASHBOARD](../sources.md)
 
 ### Релевантные REST операции и схемы
 
@@ -266,4 +266,4 @@ time / batch:
 
 ## Открытые provider вопросы
 
-Точный нынешний `tools/list`, Batch/delete schema и rollback не установлены; Batch/delete не требуются [контракту скилла](https://github.com/ibelyasov/jedikit/blob/43fc19e/skills/jedikit-tasks/references/write-policy.md). При диагностике на Hermes по просьбе владельца можно проверить query-toolsets/OAuth, filters/Inbox membership, pagination, enum payloads, timezone и side effects используемых task/project/checklist/tag операций. Это непроверенные слои, а не обязательный runtime-гейт ([ADR0005](../../docs/adr/0005-hermes-host-connections.md)). Публичное имя операции и annotation не доказывают atomicity, idempotency или успешное действие с данными. Restore/unarchive не считать универсальным undo. Новые результаты должны хранить дату, host/client/server, фактический read scope и очищенный evidence, сохраняя исторические snapshots отдельно.
+Точный нынешний `tools/list`, Batch/delete schema и rollback не установлены; Batch/delete не требуются [контракту скилла](https://github.com/ibelyasov/eva/blob/43fc19e/skills/jedikit-tasks/references/write-policy.md). При диагностике на Hermes по просьбе владельца можно проверить query-toolsets/OAuth, filters/Inbox membership, pagination, enum payloads, timezone и side effects используемых task/project/checklist/tag операций. Это непроверенные слои, а не обязательный runtime-гейт ([ADR0005](../../docs/adr/0005-hermes-host-connections.md)). Публичное имя операции и annotation не доказывают atomicity, idempotency или успешное действие с данными. Restore/unarchive не считать универсальным undo. Новые результаты должны хранить дату, host/client/server, фактический read scope и очищенный evidence, сохраняя исторические snapshots отдельно.
