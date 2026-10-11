@@ -3,7 +3,8 @@
 Основания пяти русскоязычных Agent Skill: `jedikit-tasks` для задач в
 SingularityApp, `jedikit-habits` для экспериментов и ритуалов в Habitify,
 `jedikit-calendar` для Google Calendar, `jedikit-planning` для Плана дня
-и `jedikit` для навигации по запросу.
+и всегда загруженный навигатор `jedikit` — карта скиллов и носитель
+предпочтений.
 Действующие правила находятся в [`skills/`](../skills/), термины — в
 [CONTEXT.md](../CONTEXT.md), решения — в [ADR](../docs/adr/).
 
@@ -24,6 +25,7 @@ SingularityApp, `jedikit-habits` для экспериментов и ритуа
 | Когда и как уточнять запрос? | [Доспрос](agents/clarification.md) |
 | Как связывать скиллы и находить нужный сценарий? | [Композиция скиллов](agents/skill-composition.md) |
 | Что известно о хосте скиллов? | [Hermes](platforms/hermes.md) |
+| Что рекомендовать при setup: предпочтения и приглашения? | [Рекомендации setup](setup.md) |
 | Какие ограничения есть у заимствований и атрибуции? | [Право и атрибуция](legal-and-attribution.md) |
 | Где найти цитату, URL/DOI, объём чтения и дату доступа? | [Единый реестр источников](sources.md) |
 
@@ -37,7 +39,7 @@ SingularityApp, `jedikit-habits` для экспериментов и ритуа
 | `jedikit-habits` | [привычки](habits/README.md) и досье раздела, [ритуалы](habits/rituals.md), [Habitify](providers/habitify.md) |
 | `jedikit-calendar` | [наука календаря](calendar/academic.md), [методы и практики](calendar/methods-and-practices.md), [цвет записей](calendar/event-colors.md), [Google Calendar](providers/google-calendar.md) |
 | `jedikit-planning` | [наука календаря](calendar/academic.md), [методы и практики](calendar/methods-and-practices.md), [цвет записей](calendar/event-colors.md), [академические основания задач](tasks/academic.md) |
-| `jedikit` | [композиция скиллов](agents/skill-composition.md) |
+| `jedikit` | [композиция скиллов](agents/skill-composition.md), [рекомендации setup](setup.md) |
 | Все скиллы | [доспрос](agents/clarification.md), [композиция скиллов](agents/skill-composition.md), [хост Hermes](platforms/hermes.md) |
 
 Ссылки досье на текст скиллов закреплены на ревизии, которую досье анализировали.

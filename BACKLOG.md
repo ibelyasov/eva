@@ -17,6 +17,7 @@
 - Подтверждённый канал доставки и настройки приватности для таких напоминаний.
 - Чтение рабочего Outlook-календаря в сквозной вид дня.
 - Планирование недели и обзор календаря на две недели.
+- Синхронизация задач SingularityApp и Google Calendar.
 - Подготовка к встрече и follow-up.
 - Именованная легенда Категорий цвета в интерфейсе Google через labels Google (`eventLabelId`, `eventLabelVersion`, `Calendars.labelProperties.eventLabels`; 24 стандартных и до 200 своих цветов) — при поддержке в выбранном MCP; `@cocal/google-calendar-mcp` 2.7.0 их не предоставляет ([ADR 0015](docs/adr/0015-event-color-by-activity-meaning.md)).
 
@@ -33,8 +34,10 @@
 
 - Kanban и toolset `kanban` ([ADR 0007](docs/adr/0007-no-kanban.md)).
 - Команда `off`: Off Mode отсутствует в API Habitify и включается только в приложении. Это не то же самое, что `pause`.
-- Память состояния обзоров, дат выполнения и поведенческих паттернов ([ADR 0006](docs/adr/0006-memory-holds-settings-only.md)).
+- Память состояния обзоров, дат выполнения и поведенческих паттернов ([ADR 0006](docs/adr/0006-memory-holds-object-marks.md)).
 - Официальный Habitify MCP ([ADR 0001](docs/adr/0001-habitify-via-rest.md)).
+- Portable plugin manifest и `hermes plugins install` ([ADR 0005](docs/adr/0005-hermes-host-connections.md)).
+- Setup в чате, запись Предпочтений в `memory` и создание или изменение заданий cron скиллами ([ADR 0017](docs/adr/0017-declarative-preferences.md), [ADR 0003](docs/adr/0003-no-unattended-writes.md)).
 - Собственный код, production MCP/proxy/runtime, generated copies, служебные проекты и теги, telemetry, self-update и scheduled installation.
 - Серверный batch: группа операций выполняется последовательно и не откатывается автоматически; явно названная пользователем — сразу, собранная агентом — после одного Preview и подтверждения ([ADR 0014](docs/adr/0014-confirmations.md)).
 - Permanent delete исходного Inbox item и любые фоновые записи ([ADR 0003](docs/adr/0003-no-unattended-writes.md), [ADR 0008](docs/adr/0008-cancel-instead-of-delete.md)).

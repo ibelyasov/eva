@@ -11,13 +11,13 @@ description: "Привычки и Ритуалы в Habitify: поведенче
 
 1. Определи сценарий по таблице, читай только его references.
 2. Еда, вес, потеря контроля, вещества, алкоголь, никотин, лекарства, сексуальное поведение или любой сигнал риска — сначала [safety.md](references/safety.md), затем тема: [food-behavior.md](references/food-behavior.md), [sexual-behavior.md](references/sexual-behavior.md), [cessation.md](references/cessation.md). Safety-стоп важнее любой команды.
-3. Перед Habitify, `memory` или `cronjob_manage` прочитай [write-policy.md](references/write-policy.md) и [tools.md](references/tools.md).
-4. Файлы скилла загружай `skill_view(name="<имя этого скилла>", file_path="references/<файл>.md")`, контракт — `file_path="tools.json"`; Markdown-ссылка файл не загружает. Соседний скилл JediKit — `skill_view(name=…)` с тем же префиксом, что у этого скилла: `agent-plugin-jedikit-805a716c:jedikit-habits` → `agent-plugin-jedikit-805a716c:jedikit-calendar`, голое `jedikit-habits` → `jedikit-calendar`.
+3. Перед записью в Habitify или `memory` прочитай [write-policy.md](references/write-policy.md) и [tools.md](references/tools.md).
+4. Файлы скилла загружай `skill_view(name="jedikit-habits", file_path="references/<файл>.md")`, контракт — `file_path="tools.json"`; Markdown-ссылка файл не загружает. Соседний скилл JediKit — `skill_view(name="jedikit-calendar")`.
 
 | Запрос | Результат | Reference |
 | --- | --- | --- |
-| `setup` | Привычки, timezone, названия, окно обзоров, расписание | [setup.md](references/setup.md) |
-| `status`, «какие привычки сегодня?» | Чтение эксперимента или дня | [setup.md](references/setup.md#status) |
+| «давай настроим привычки» | Привычки и один ход | [settings.md](references/settings.md#открытый-запрос) |
+| `status`, «какие привычки сегодня?» | Чтение настроек, эксперимента или дня | [settings.md](references/settings.md#status) |
 | `design`, «хочу проверить…»; `adjust` | Одна гипотеза, привычка, План эксперимента; в плане изменена одна вещь | [experiments.md](references/experiments.md), [coaching.md](references/coaching.md) |
 | `log`, «отметь…», отмена Отметки | Отметка за точную дату; отмена с подтверждением потерь | [tracking.md](references/tracking.md) |
 | `urge`, «тянет…» | 1–3 действия из плана, без записи | [tracking.md](references/tracking.md#тяга) |
@@ -41,5 +41,6 @@ description: "Привычки и Ритуалы в Habitify: поведенче
 - Один эксперимент за раз; пакет привычек не собирай.
 - Habitify — только серверы `habitify_read` и `habitify` по tools.md.
 - Безвозвратные удаления привычки, Области и Отметок — только по явной просьбе и после карточки «Нет»/«Да» с потерями.
-- Фоновый запуск только читает. Настройки — только `memory` по [setup.md](references/setup.md#где-хранить-настройки); файлы скиллов JediKit не меняй, `skill_manage` не вызывай.
+- Фоновый запуск только читает; задания расписания не создавай и не меняй ([settings.md](references/settings.md#фоновый-запуск)).
+- Предпочтения только читай из блока навигатора `jedikit`; `memory` — только Ритуалы ([settings.md](references/settings.md)). Файлы скиллов не меняй, `skill_manage` не вызывай.
 - Задачи — `jedikit-tasks`; календарь и блок Распорядка ритуала — `jedikit-calendar` ([rituals.md](references/rituals.md#сдвиг-старта-с-блоком-распорядка)).

@@ -1,6 +1,6 @@
 ---
 name: jedikit-calendar
-description: "Личный Google Calendar: вид дня и недели, События, Распорядок. Используй, чтобы посмотреть день или неделю, записать, перенести, изменить или удалить Событие, вести Распорядок, напоминания, цвета и настройки календаря; setup, status, help. План дня с задачами ведёт jedikit-planning."
+description: "Личный Google Calendar: вид дня и недели, События, Распорядок. Используй, чтобы посмотреть день или неделю, записать, перенести, изменить или удалить Событие, вести Распорядок, напоминания и цвета; status, help. План дня с задачами ведёт jedikit-planning."
 ---
 
 # jedikit-calendar
@@ -10,9 +10,9 @@ description: "Личный Google Calendar: вид дня и недели, Со�
 ## Вход в сценарий
 
 1. Определи сценарий по таблице и прочитай его reference.
-2. До обращения к Google Calendar или `memory` прочитай [write-policy.md](references/write-policy.md) и [tools.md](references/tools.md). Настройки читай и меняй по [setup.md](references/setup.md).
+2. До обращения к Google Calendar прочитай [write-policy.md](references/write-policy.md) и [tools.md](references/tools.md). Предпочтения бери из блока `[Skill config …]` навигатора `jedikit` по [preferences.md](references/preferences.md).
 3. Операции Google Calendar — только MCP-сервер `google_calendar` по [tools.json](tools.json). Подключение и OAuth — у Hermes.
-4. Файлы скилла загружай `skill_view(name="<имя этого скилла>", file_path="references/<файл>.md")`, контракт — `file_path="tools.json"`; Markdown-ссылка файл не загружает. Соседний скилл JediKit — `skill_view(name=…)` с тем же префиксом, что у этого скилла: `agent-plugin-jedikit-805a716c:jedikit-calendar` → `agent-plugin-jedikit-805a716c:jedikit-tasks`, голое `jedikit-calendar` → `jedikit-tasks`.
+4. Файлы скилла загружай `skill_view(name="<имя этого скилла>", file_path="references/<файл>.md")`, контракт — `file_path="tools.json"`; Markdown-ссылка файл не загружает. Соседний скилл JediKit — голым именем: `skill_view(name="jedikit-tasks")`.
 
 ## Маршрутизация
 
@@ -24,8 +24,8 @@ description: "Личный Google Calendar: вид дня и недели, Со�
 | «Напомни за час», «убери напоминания», «перекрась неделю по схеме» | Напоминания и цвет по правилам или просьбе, Read-back | [events.md](references/events.md) |
 | «Добавь сон с 23:00 до 07:00», Распорядок; сдвиг старта ритуала от `jedikit-habits` | Повторяющийся блок с видимой меткой, Read-back | [routine.md](references/routine.md) |
 | Календарная часть утренней сводки | Первое Событие, окна, пересечения, Распорядок; только чтение | [digest.md](references/digest.md) |
-| `setup`; «мой день с 8 до 22», «живу по Москве» | Сохранённые и перечитанные настройки | [setup.md](references/setup.md) |
-| `status` | Настройки, недостающее, доступность инструментов; без записей | [setup.md](references/setup.md#status) |
+| «Мой день с 8 до 22», «для Броней без напоминаний» | Ключ и новое значение для Потребителя; по желанию — до конца разговора | [preferences.md](references/preferences.md#просьба-изменить-предпочтение) |
+| `status` | Предпочтения, недостающее, доступность инструментов; без записей | [preferences.md](references/preferences.md#status) |
 | `help` | Возможности и 2–3 примера без обращения к аккаунту | — |
 
 ## Уточнение и согласие
@@ -40,7 +40,7 @@ description: "Личный Google Calendar: вид дня и недели, Со�
 - В календаре три роли: Событие — обязательство со временем, Бронь — время под задачу, Распорядок — регулярный блок поведения. Задачи и Отметки привычек живут у провайдеров; прошедшая запись ничего не выполняет и не закрывает.
 - Намерение без времени или договорённости и встречу без даты передай `jedikit-tasks` ([events.md](references/events.md#не-событие)).
 - Конфликты показывай, не решай. Буферы не добавляй. Распорядок ставь только по просьбе и не предлагай ужать или сдвинуть его ради других дел. Точное расписание досуга сам не предлагай.
-- Фоновые запуски только читают; задание сводки заводит владелец Hermes ([digest.md](references/digest.md)).
-- Настройки — только `memory` по [setup.md](references/setup.md#где-хранить-настройки); файлы скиллов JediKit не меняй, `skill_manage` не вызывай.
+- Фоновые запуски только читают; задание сводки заводит Потребитель ([digest.md](references/digest.md)).
+- Предпочтения только читай из блока `jedikit`; записей в `memory` нет. Файлы скиллов JediKit не меняй, `skill_manage` не вызывай.
 - Приглашение с явно другим организатором не меняй и не удаляй ([write-policy.md](references/write-policy.md#остановки)).
 - Вне скилла: RSVP и приглашения, рабочий Outlook, `defaultReminders` календаря, подготовка к Событию и follow-up.

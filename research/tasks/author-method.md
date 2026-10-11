@@ -2,7 +2,7 @@
 
 **Проверено:** 2026-09-13 (Europe/Moscow)
 
-Дата относится к прежнему чтению источников; при переструктурировании они не открывались заново. Термины JediKit заданы в [CONTEXT](../../CONTEXT.md). Исторические термины автора и интерфейса сохраняются только в описании источников. По [правилам дерева](https://github.com/ibelyasov/jedikit/blob/43fc19e/skills/jedikit-tasks/references/tree.md) дерево устроено как область → папка → проект; папка определяется дочерними проектами ([ADR0002](../../docs/adr/0002-folder-is-inferred.md)). Проекту нужен один следующий шаг, два допустимы, если независимы. Ресурс дня — самооценка, фокус-лист не проверяет календарь и вместимость; в памяти только настройки ([ADR0006](../../docs/adr/0006-memory-holds-settings-only.md)). Разделы и теги описаны в [structure.md §6](structure.md#6-операционные-правила-когда-предлагать-изменения), kanban не поддерживается ([ADR0007](../../docs/adr/0007-no-kanban.md)).
+Дата относится к прежнему чтению источников; при переструктурировании они не открывались заново. Термины JediKit заданы в [CONTEXT](../../CONTEXT.md). Исторические термины автора и интерфейса сохраняются только в описании источников. По [правилам дерева](https://github.com/ibelyasov/jedikit/blob/43fc19e/skills/jedikit-tasks/references/tree.md) дерево устроено как область → папка → проект; папка определяется дочерними проектами ([ADR0002](../../docs/adr/0002-folder-is-inferred.md)). Проекту нужен один следующий шаг, два допустимы, если независимы. Ресурс дня — самооценка, фокус-лист не проверяет календарь и вместимость; в памяти только настройки ([ADR0006](../../docs/adr/0006-memory-holds-object-marks.md)). Разделы и теги описаны в [structure.md §6](structure.md#6-операционные-правила-когда-предлагать-изменения), kanban не поддерживается ([ADR0007](../../docs/adr/0007-no-kanban.md)).
 
 Это подробный исследовательский документ. Он фиксирует доступные основания метода, их точную область действия и возможный перевод в интерфейс агента. Он не является `SKILL.md`, не заменяет книги и не меняет согласованный продукт. Текущий контракт JediKit задан в [SKILL](https://github.com/ibelyasov/jedikit/blob/43fc19e/skills/jedikit-tasks/SKILL.md).
 
@@ -62,7 +62,7 @@
 8. Поддерживать систему daily/weekly review (`A`: CQ, TPL, R26).
 9. Подбирать практики экспериментально и не обещать универсальный результат (`A`: B2T, R26).
 
-Preview, подтверждения, доступный scope и конкретные инструменты — `O`. Их актуальный контракт задают [правила записи](https://github.com/ibelyasov/jedikit/blob/43fc19e/skills/jedikit-tasks/references/write-policy.md). Исторические состояния и timestamps обзоров не являются настройками памяти JediKit ([ADR0006](../../docs/adr/0006-memory-holds-settings-only.md)).
+Preview, подтверждения, доступный scope и конкретные инструменты — `O`. Их актуальный контракт задают [правила записи](https://github.com/ibelyasov/jedikit/blob/43fc19e/skills/jedikit-tasks/references/write-policy.md). Исторические состояния и timestamps обзоров не являются настройками памяти JediKit ([ADR0006](../../docs/adr/0006-memory-holds-object-marks.md)).
 
 ## 3. Восемнадцать практик и их границы
 
@@ -246,11 +246,11 @@ Daily open проходит вчерашние хвосты, ресурс дня
 
 ### DT-6. Nail-puller и closure
 
-Обратная прокрутка примерно минуту и запись всплывшего — A/B2. Capture всплывшего и последующий Triage — `O`, [Inbox](https://github.com/ibelyasov/jedikit/blob/43fc19e/skills/jedikit-tasks/references/inbox.md). История и timestamps обзоров в памяти не хранятся: [ADR0006](../../docs/adr/0006-memory-holds-settings-only.md).
+Обратная прокрутка примерно минуту и запись всплывшего — A/B2. Capture всплывшего и последующий Triage — `O`, [Inbox](https://github.com/ibelyasov/jedikit/blob/43fc19e/skills/jedikit-tasks/references/inbox.md). История и timestamps обзоров в памяти не хранятся: [ADR0006](../../docs/adr/0006-memory-holds-object-marks.md).
 
 ### DT-7. Weekly и inbox debt
 
-Weekly проходит Inbox, все проекты, их следующие шаги и структуру. Авторский TPL описывает старые списки после миграции; JediKit переносит 15/10/5 минут на отдельные сессии Inbox debt как продуктовый выбор `O`, [Обзоры](https://github.com/ibelyasov/jedikit/blob/43fc19e/skills/jedikit-tasks/references/reviews.md). Пропущенный Weekly не отслеживается в памяти — приглашает расписание хоста ([ADR0006](../../docs/adr/0006-memory-holds-settings-only.md)).
+Weekly проходит Inbox, все проекты, их следующие шаги и структуру. Авторский TPL описывает старые списки после миграции; JediKit переносит 15/10/5 минут на отдельные сессии Inbox debt как продуктовый выбор `O`, [Обзоры](https://github.com/ibelyasov/jedikit/blob/43fc19e/skills/jedikit-tasks/references/reviews.md). Пропущенный Weekly не отслеживается в памяти — приглашает расписание хоста ([ADR0006](../../docs/adr/0006-memory-holds-object-marks.md)).
 
 ### DT-8. Перегруз и отказ
 
