@@ -8,7 +8,7 @@
 
 ## Хранилище
 
-- Итоги дня и недели в заметках Дневника (3–5 тезисов) — отдельным решением; фоновые запуски в Хранилище не пишут ([ADR 0003](docs/adr/0003-no-unattended-writes.md)).
+- Итоги дня и недели в заметках Дневника (3–5 тезисов) — отдельным решением; фоновые запуски пишут в Хранилище только Журнал Eva ([ADR 0003](docs/adr/0003-no-unattended-writes.md)).
 - Распознавание текста PDF и фото (OCR): присланные файлы сохраняются без обработки.
 - Полная копия веб-страницы с локальными картинками — когда у Хоста появится инструмент полного захвата; `web_extract` оставляет картинки удалёнными ссылками.
 - Видео и их транскрипты.
@@ -22,11 +22,10 @@
 ## Напоминания и календарь
 
 - Контракт напоминаний вне календаря, различающий плановую дату `start`, срок `deadline` и уведомление расписания хоста.
-- Подтверждённый канал доставки и настройки приватности для таких напоминаний.
+- Подтверждённый канал доставки для таких напоминаний.
 - Чтение рабочего Outlook-календаря в сквозной вид дня.
 - Планирование недели и обзор календаря на две недели.
 - Синхронизация задач SingularityApp и Google Calendar.
-- Подготовка к встрече и follow-up.
 - Именованная легенда Категорий цвета в интерфейсе Google через labels Google (`eventLabelId`, `eventLabelVersion`, `Calendars.labelProperties.eventLabels`; 24 стандартных и до 200 своих цветов) — при поддержке в выбранном MCP; `@cocal/google-calendar-mcp` 2.7.0 их не предоставляет ([ADR 0015](docs/adr/0015-event-color-by-activity-meaning.md)).
 
 ## Расширенное планирование проектов
@@ -36,18 +35,24 @@
 ## Публикация и интеграции
 
 - Подача в Hermes Skills Hub после отдельного решения о публикации.
-- События и webhooks — только при подтверждённом контракте провайдера; собственный poller не входит в scope ([ADR 0004](docs/adr/0004-no-custom-code.md)).
+
+## Инициатива и Хост
+
+- Событийные триггеры и webhooks: Инициатива по изменению у провайдера вместо ожидания Дневной проверки — только при подтверждённом источнике событий и готовом посреднике у Потребителя; собственный poller и connector не входят в scope ([ADR 0004](docs/adr/0004-no-custom-code.md), [ADR 0022](docs/adr/0022-eva-journal-and-initiative.md)).
+- Profile distribution, профили-наблюдатели и субагенты: поставка Eva готовым профилем Hermes с `SOUL.md`, конфигурацией и заданиями cron, отдельные профили с другими правами и моделями — требует пересмотра [ADR 0004](docs/adr/0004-no-custom-code.md) и [ADR 0016](docs/adr/0016-consumer-boundary.md).
+- Внешние memory providers (Honcho и аналоги) для модели владельца: состояние Eva остаётся в Журнале Eva ([ADR 0006](docs/adr/0006-state-in-eva-journal.md)).
+- Кнопки в сообщениях Ритма и Возвратов (например «Выбрать дело» и «Пропустить») — когда Хост даст их в доставке cron; сейчас ответ — фраза в чат, а кнопки `clarify` есть только в разговоре.
 
 ## Явно исключено
 
 - Kanban и toolset `kanban` ([ADR 0007](docs/adr/0007-no-kanban.md)).
 - Команда `off`: Off Mode отсутствует в API Habitify и включается только в приложении. Это не то же самое, что `pause`.
-- Память состояния обзоров, дат выполнения и поведенческих паттернов ([ADR 0006](docs/adr/0006-memory-holds-object-marks.md)).
 - Официальный Habitify MCP ([ADR 0001](docs/adr/0001-habitify-via-rest.md)).
 - Portable plugin manifest и `hermes plugins install` ([ADR 0005](docs/adr/0005-hermes-host-connections.md)).
-- Setup в чате, запись Предпочтений в `memory` и создание или изменение заданий cron скиллами ([ADR 0017](docs/adr/0017-declarative-preferences.md), [ADR 0003](docs/adr/0003-no-unattended-writes.md)).
+- Setup в чате, запись Предпочтений в Журнал Eva или `memory` и создание, удаление или изменение заданий Ритма скиллами, кроме `attach_to_session` у названного задания по явной просьбе владельца ([ADR 0017](docs/adr/0017-declarative-preferences.md), [ADR 0003](docs/adr/0003-no-unattended-writes.md)).
 - Собственный код, production MCP/proxy/runtime, generated copies, служебные проекты и теги, telemetry, self-update и scheduled installation.
 - Серверный batch: группа операций выполняется последовательно и не откатывается автоматически; явно названная пользователем — сразу, собранная агентом — после одного Preview и подтверждения ([ADR 0014](docs/adr/0014-confirmations.md)).
 - Автоматический разбор Входящих хранилища, дневника и файлов без инициативы владельца ([ADR 0018](docs/adr/0018-notes-over-llm-wiki.md)).
-- Permanent delete исходного Inbox item и любые фоновые записи ([ADR 0003](docs/adr/0003-no-unattended-writes.md), [ADR 0008](docs/adr/0008-cancel-instead-of-delete.md)).
+- Permanent delete исходного Inbox item и фоновые записи провайдерам и в заметки Хранилища ([ADR 0003](docs/adr/0003-no-unattended-writes.md), [ADR 0008](docs/adr/0008-cancel-instead-of-delete.md)).
+- Подготовка к встречам и итоги после них ([ADR 0022](docs/adr/0022-eva-journal-and-initiative.md)).
 - Публичный SLA поддержки.

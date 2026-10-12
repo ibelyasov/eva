@@ -1,0 +1,53 @@
+{
+  "version": 2,
+  "tools": [
+    {
+      "toolset": "file",
+      "name": "read_file",
+      "access": "read"
+    },
+    {
+      "toolset": "file",
+      "name": "search_files",
+      "access": "read"
+    },
+    {
+      "toolset": "file",
+      "name": "write_file",
+      "access": "write"
+    },
+    {
+      "toolset": "file",
+      "name": "patch",
+      "access": "write"
+    },
+    {
+      "toolset": "terminal",
+      "name": "terminal",
+      "access": "read",
+      "optional": true
+    },
+    {
+      "toolset": "cronjob",
+      "name": "cronjob_manage",
+      "access": "write",
+      "optional": true
+    },
+    {
+      "toolset": "session_search",
+      "name": "session_search",
+      "access": "read",
+      "optional": true
+    },
+    {
+      "toolset": "skills",
+      "name": "skill_view",
+      "access": "read"
+    },
+    {
+      "toolset": "clarify",
+      "name": "clarify",
+      "access": "read"
+    }
+  ]
+}

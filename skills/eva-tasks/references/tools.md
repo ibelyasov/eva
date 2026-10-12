@@ -1,6 +1,6 @@
 # Контракт инструментов SingularityApp
 
-Операции SingularityApp даёт официальный hosted SingularityApp MCP, подключённый в Hermes как сервер `singularity`. Ожидаемый набор задан в [tools.json](../tools.json) (загрузка — `skill_view(name="<имя этого скилла>", file_path="tools.json")`): `server` — `singularity`, `name` — базовое имя, `access` — `read` или `write`.
+Операции SingularityApp даёт официальный hosted SingularityApp MCP, подключённый в Hermes как сервер `singularity`. Ожидаемый набор задан в `tools.json` (загрузка — `skill_view(name="<имя этого скилла>", file_path="tools.json")`): `server` — `singularity`, `name` — базовое имя, `access` — `read` или `write`.
 
 ## Вызов в Hermes
 

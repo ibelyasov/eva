@@ -4,7 +4,8 @@
 SingularityApp, `eva-habits` для экспериментов и ритуалов в Habitify,
 `eva-calendar` для Google Calendar, `eva-planning` для Плана дня,
 `eva-notes` для Хранилища Obsidian и всегда загруженный навигатор
-`eva` — карта скиллов и носитель предпочтений.
+`eva` — карта скиллов, носитель предпочтений, владелец Журнала Eva и
+Инициативы.
 Действующие правила находятся в [`skills/`](../skills/), термины — в
 [CONTEXT.md](../CONTEXT.md), решения — в [ADR](../docs/adr/).
 
@@ -27,8 +28,9 @@ SingularityApp, `eva-habits` для экспериментов и ритуало
 | Какие контракты доступны провайдерам? | [SingularityApp](providers/singularity.md), [Habitify](providers/habitify.md), [Google Calendar](providers/google-calendar.md) |
 | Когда и как уточнять запрос? | [Доспрос](agents/clarification.md) |
 | Как связывать скиллы и находить нужный сценарий? | [Композиция скиллов](agents/skill-composition.md) |
+| Когда и как Eva начинает сама: Инициатива, сообщения, тишина, Возвраты? | [Проактивность](agents/proactivity.md) |
 | Что известно о хосте скиллов? | [Hermes](platforms/hermes.md) |
-| Что рекомендовать при setup: предпочтения и приглашения? | [Рекомендации setup](setup.md) |
+| Что рекомендовать при setup: предпочтения и время заданий Ритма? | [Рекомендации setup](setup.md) |
 | Какие ограничения есть у заимствований и атрибуции? | [Право и атрибуция](legal-and-attribution.md) |
 | Где найти цитату, URL/DOI, объём чтения и дату доступа? | [Единый реестр источников](sources.md) |
 
@@ -43,8 +45,8 @@ SingularityApp, `eva-habits` для экспериментов и ритуало
 | `eva-calendar` | [наука календаря](calendar/academic.md), [методы и практики](calendar/methods-and-practices.md), [цвет записей](calendar/event-colors.md), [Google Calendar](providers/google-calendar.md) |
 | `eva-planning` | [наука календаря](calendar/academic.md), [методы и практики](calendar/methods-and-practices.md), [цвет записей](calendar/event-colors.md), [академические основания задач](tasks/academic.md) |
 | `eva-notes` | [Хранилище](notes/README.md): [академические основания](notes/academic.md), [практики сообщества](notes/community-practices.md), [идеи](notes/ideas.md), [поля](notes/fields.md); [хост Hermes](platforms/hermes.md) — встроенные `llm-wiki` и `obsidian`, песочница и кэш; [рекомендации setup, §4.9](setup.md#49-evanotesvault_name) |
-| `eva` | [композиция скиллов](agents/skill-composition.md), [рекомендации setup](setup.md), [идеи](notes/ideas.md) — маршрутизация «запиши …» |
-| Все скиллы | [доспрос](agents/clarification.md), [композиция скиллов](agents/skill-composition.md), [хост Hermes](platforms/hermes.md) |
+| `eva` | [проактивность](agents/proactivity.md) — Журнал, Инициатива, Ритм и Возвраты; [композиция скиллов](agents/skill-composition.md), [рекомендации setup](setup.md), [идеи](notes/ideas.md) — маршрутизация «запиши …» |
+| Все скиллы | [доспрос](agents/clarification.md), [композиция скиллов](agents/skill-composition.md), [проактивность](agents/proactivity.md) — сигналы и практики для Инициативы, форма сообщений, [хост Hermes](platforms/hermes.md) |
 
 Ссылки досье на текст скиллов закреплены на ревизии, которую досье анализировали.
 

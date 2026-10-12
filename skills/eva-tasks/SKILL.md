@@ -1,6 +1,6 @@
 ---
 name: eva-tasks
-description: "Задачи и проекты в SingularityApp по «Джедайским техникам» Максима Дорофеева: записать дело во Inbox, разобрать Inbox item, сформулировать задачу, дерево Областей и Папок, следующий шаг проекта, утренний, вечерний, недельный и месячный обзоры — capture, triage, project, daily open, daily close, weekly. Привычки ведёт eva-habits, календарь — eva-calendar, План дня с календарём — eva-planning."
+description: "Задачи и проекты в SingularityApp по «Джедайским техникам» Максима Дорофеева: записать дело во Inbox, разобрать Inbox item, сформулировать задачу, дерево Областей и Папок, следующий шаг проекта, выгрузить всё из головы, утренний, вечерний, недельный и месячный обзоры — capture, triage, project, daily open, daily close, weekly. Привычки ведёт eva-habits, календарь — eva-calendar, План дня с календарём — eva-planning."
 ---
 
 # eva-tasks
@@ -10,7 +10,7 @@ description: "Задачи и проекты в SingularityApp по «Джеда
 ## Вход в сценарий
 
 1. Выбери строку таблицы по команде или фразе и прочитай её reference; другие — по ссылке из текущего.
-2. До первого обращения к SingularityApp или `memory` прочитай [write-policy.md](references/write-policy.md) и [tools.md](references/tools.md).
+2. До первого обращения к SingularityApp или Журналу Eva прочитай [write-policy.md](references/write-policy.md) и [tools.md](references/tools.md).
 3. Файлы скилла загружай `skill_view(name="eva-tasks", file_path="references/<файл>.md")`, контракт — `file_path="tools.json"`; Markdown-ссылка файл не загружает. Соседний скилл — по имени: `skill_view(name="eva-calendar")`.
 4. Предпочтения читай из блока `[Skill config …]` навигатора `eva` по [settings.md](references/settings.md#предпочтения).
 
@@ -21,16 +21,16 @@ description: "Задачи и проекты в SingularityApp по «Джеда
 | «Настрой дерево», Области и Папки | Дерево, Режимы поддерева, новые Области | [tree.md](references/tree.md) |
 | Рабочие дни, timezone, режим Области или Папки; `status` | Предпочтения, режимы, их состояние | [settings.md](references/settings.md) |
 | `capture`, «запиши», «сохрани, чтобы не забыть» | Обязательство — Inbox item; идея, мысль, ссылка — `eva-notes` | [inbox.md](references/inbox.md#capture) |
-| `triage`, «разберём Inbox», «уточни задачу» | Разобранный Inbox item | [inbox.md](references/inbox.md#triage) |
-| «Накопился Inbox» | Сессия Inbox debt | [inbox.md](references/inbox.md#inbox-debt) |
+| `triage`, «разберём Inbox», «уточни задачу»; «накопился Inbox» | Разобранный Inbox item; сессия Inbox debt | [inbox.md](references/inbox.md#triage) |
 | Формулировка, дата, приоритет, длительность; «сделал», «отмени задачу», архив | Изменённая Задача | [tasks.md](references/tasks.md) |
 | `project`, «проверь проект», «следующий шаг», «закрой проект»; обратная ссылка из Хранилища | Результат, Следующий шаг, судьба открытых Задач | [projects.md](references/projects.md) |
 | Разделы, Теги, Чек-лист | Структура внутри и поперёк Проектов | [structure.md](references/structure.md) |
 | `daily open`, «начнём день» | Хвосты, Ресурс дня, Фокус-лист | [daily.md](references/daily.md#daily-open) |
 | `daily close`, «закроем день» | Остатки, затронутые Проекты, Гвоздодёр | [daily.md](references/daily.md#daily-close) |
+| «Голова забита», выгрузить всё; «что-то забыл», Гвоздодёр | Названное разложено по местам | [brain-dump.md](references/brain-dump.md) |
 | `weekly`, «еженедельный обзор» | Inbox, все Проекты, Следующие шаги, структура | [weekly.md](references/weekly.md) |
 | «Пересмотрим когда-нибудь» | Месячный обзор поддеревьев Когда-нибудь | [someday.md](references/someday.md) |
-| Запуск `[расписание eva]`; «напоминай о weekly» | Чтение и приглашение; задания — у Потребителя | [background.md](references/background.md) |
+| Инициатива: запуск Ритма или Возврат; ответ на сообщение Eva | Практика по сигналу, переход | [signals.md](references/signals.md) |
 | `help` | Команды и предложение сценария | этот файл |
 
 ## Уточнение и согласие
@@ -43,8 +43,7 @@ description: "Задачи и проекты в SingularityApp по «Джеда
 ## Границы
 
 - SingularityApp — только MCP-сервер `singularity` по [контракту](references/tools.md).
-- У каждого действия один ответственный скилл: привычки и Ритуалы — `eva-habits`, События — `eva-calendar`, Хранилище Obsidian — `eva-notes`. Встреча из Inbox — `eva-calendar`, Идея и Справка — `eva-notes` по Triage.
-- Daily open собирает Фокус-лист без календаря и проверки вместимости.
+- У каждого действия один ответственный скилл: привычки и Ритуалы — `eva-habits`, События — `eva-calendar`, Хранилище Obsidian — `eva-notes`.
 - Kanban, удаление объектов и служебные Теги состояния агента вне скилла.
-- Фоновый запуск только читает и приглашает; задания cron не создавай.
-- Предпочтения только читай; в `memory` — только Режимы поддерева по [settings.md](references/settings.md#где-хранить). Файлы скиллов Eva не меняй, `skill_manage` не вызывай.
+- Фоновый запуск читает SingularityApp, пишет только Журнал Eva и ни о чём не спрашивает.
+- Предпочтения только читай. Режимы поддерева — в `Eva/Пометки.md` по [settings.md](references/settings.md#где-хранить); `memory` не используй. Файлы скиллов Eva не меняй, `skill_manage` не вызывай.

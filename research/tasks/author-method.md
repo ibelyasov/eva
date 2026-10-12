@@ -2,7 +2,7 @@
 
 **Проверено:** 2026-09-13 (Europe/Moscow)
 
-Дата относится к прежнему чтению источников; при переструктурировании они не открывались заново. Термины Eva заданы в [CONTEXT](../../CONTEXT.md). Исторические термины автора и интерфейса сохраняются только в описании источников. По [правилам дерева](https://github.com/ibelyasov/eva/blob/43fc19e/skills/jedikit-tasks/references/tree.md) дерево устроено как область → папка → проект; папка определяется дочерними проектами ([ADR0002](../../docs/adr/0002-folder-is-inferred.md)). Проекту нужен один следующий шаг, два допустимы, если независимы. Ресурс дня — самооценка, фокус-лист не проверяет календарь и вместимость; в памяти только настройки ([ADR0006](../../docs/adr/0006-memory-holds-object-marks.md)). Разделы и теги описаны в [structure.md §6](structure.md#6-операционные-правила-когда-предлагать-изменения), kanban не поддерживается ([ADR0007](../../docs/adr/0007-no-kanban.md)).
+Дата относится к прежнему чтению источников; при переструктурировании они не открывались заново. Термины Eva заданы в [CONTEXT](../../CONTEXT.md). Исторические термины автора и интерфейса сохраняются только в описании источников. По [правилам дерева](https://github.com/ibelyasov/eva/blob/43fc19e/skills/jedikit-tasks/references/tree.md) дерево устроено как область → папка → проект; папка определяется дочерними проектами ([ADR0002](../../docs/adr/0002-folder-is-inferred.md)). Проекту нужен один следующий шаг, два допустимы, если независимы. Ресурс дня — самооценка, фокус-лист не проверяет календарь и вместимость; `memory` Hermes Eva не использует: Пометки объектов — в Журнале Eva (`Eva/Пометки.md`), Предпочтения — в `skills.config` ([ADR0006](../../docs/adr/0006-state-in-eva-journal.md)). Разделы и теги описаны в [structure.md §6](structure.md#6-операционные-правила-когда-предлагать-изменения), kanban не поддерживается ([ADR0007](../../docs/adr/0007-no-kanban.md)).
 
 Это подробный исследовательский документ. Он фиксирует доступные основания метода, их точную область действия и возможный перевод в интерфейс агента. Он не является `SKILL.md`, не заменяет книги и не меняет согласованный продукт. Текущий контракт Eva задан в [SKILL](https://github.com/ibelyasov/eva/blob/43fc19e/skills/jedikit-tasks/SKILL.md).
 
@@ -62,7 +62,7 @@
 8. Поддерживать систему daily/weekly review (`A`: CQ, TPL, R26).
 9. Подбирать практики экспериментально и не обещать универсальный результат (`A`: B2T, R26).
 
-Preview, подтверждения, доступный scope и конкретные инструменты — `O`. Их актуальный контракт задают [правила записи](https://github.com/ibelyasov/eva/blob/43fc19e/skills/jedikit-tasks/references/write-policy.md). Исторические состояния и timestamps обзоров не являются настройками памяти Eva ([ADR0006](../../docs/adr/0006-memory-holds-object-marks.md)).
+Preview, подтверждения, доступный scope и конкретные инструменты — `O`. Их актуальный контракт задают [правила записи](https://github.com/ibelyasov/eva/blob/43fc19e/skills/jedikit-tasks/references/write-policy.md). Исторические состояния обзоров в `memory` Hermes не хранятся; дата последнего проведения каждой практики — в `Eva/Практики.md` Журнала Eva ([ADR0006](../../docs/adr/0006-state-in-eva-journal.md)).
 
 ## 3. Восемнадцать практик и их границы
 
@@ -246,11 +246,11 @@ Daily open проходит вчерашние хвосты, ресурс дня
 
 ### DT-6. Nail-puller и closure
 
-Обратная прокрутка примерно минуту и запись всплывшего — A/B2. Capture всплывшего и последующий Triage — `O`, [Inbox](https://github.com/ibelyasov/eva/blob/43fc19e/skills/jedikit-tasks/references/inbox.md). История и timestamps обзоров в памяти не хранятся: [ADR0006](../../docs/adr/0006-memory-holds-object-marks.md).
+Обратная прокрутка примерно минуту и запись всплывшего — A/B2. Capture всплывшего и последующий Triage — `O`, [Inbox](https://github.com/ibelyasov/eva/blob/43fc19e/skills/jedikit-tasks/references/inbox.md). В `memory` Hermes история обзоров не хранится; дата последнего Гвоздодёра, ответы и отказы — в `Eva/Практики.md` Журнала Eva: [ADR0006](../../docs/adr/0006-state-in-eva-journal.md).
 
 ### DT-7. Weekly и inbox debt
 
-Weekly проходит Inbox, все проекты, их следующие шаги и структуру. Авторский TPL описывает старые списки после миграции; Eva переносит 15/10/5 минут на отдельные сессии Inbox debt как продуктовый выбор `O`, [Обзоры](https://github.com/ibelyasov/eva/blob/43fc19e/skills/jedikit-tasks/references/reviews.md). Пропущенный Weekly не отслеживается в памяти — приглашает расписание хоста ([ADR0006](../../docs/adr/0006-memory-holds-object-marks.md)).
+Weekly проходит Inbox, все проекты, их следующие шаги и структуру. Авторский TPL описывает старые списки после миграции; Eva переносит 15/10/5 минут на отдельные сессии Inbox debt как продуктовый выбор `O`, [Обзоры](https://github.com/ibelyasov/eva/blob/43fc19e/skills/jedikit-tasks/references/reviews.md). Дата последнего Weekly — в `Eva/Практики.md` Журнала Eva, а к Weekly зовёт Утро Ритма ([ADR0006](../../docs/adr/0006-state-in-eva-journal.md), [ADR 0022](../../docs/adr/0022-eva-journal-and-initiative.md)).
 
 ### DT-8. Перегруз и отказ
 
