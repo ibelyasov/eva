@@ -82,13 +82,19 @@ obsidian://open?vault=%D0%9B%D0%B8%D1%87%D0%BD%D0%BE%D0%B5&file=%D0%98%D0%B4%D0%
 
 `capture: full` — полный доступный результат извлечения (Markdown, картинки — удалённые ссылки), а не гарантия всех элементов страницы или обхода paywall; `partial` — доступный фрагмент с причиной в теле. Неуспешный захват — Заметка во `Входящие/` с URL, `received_at`, `channel`, а не источник с выдуманным `sha256`. `captured_at` и `ingested` — не дата публикации; известная дата публикации сохраняется с атрибуцией в теле.
 
+**S.** В `llm-wiki` захват — первый шаг ingest: файл попадает в `raw/` только внутри разбора, за ним в той же операции идут страницы, `index.md` и `log.md`, а в автоматическом режиме шаг обсуждения пропускается. Сырьё неизменно: «The agent reads but never modifies these», «Never modify files in `raw/`». Поэтому у основы нет неразобранного сырья, а `ingested` у неё — дата разбора. [PL-H-LLM-WIKI-0.21.6](../sources.md), L56–67, L257–301, L479.
+
+**A.** У Карпатого сырьё может копиться («drop a new source into the raw collection and tell the LLM to process it», Obsidian Web Clipper). След разбора — в вики: страница-конспект источника, раздел источников в `index.md` и запись `ingest` в `log.md`; поля «разобран» в сырье нет. [NOTES-COMM-07](../sources.md).
+
+**O.** Eva отделяет захват от разбора, поэтому неразобранные источники копятся, а `ingested` значит дату захвата. Признак Разбора — поле `processing: pending | done | skipped` в самом источнике, единственное поле, которое меняется после захвата; `sha256` от тела его не учитывает. Читатель поля — сценарий «что не разобрано», `status` и lint; поиск по значению проще слабой модели, чем сравнение источников с `log.md` и `sources`. Это переопределение правила основы о неизменном сырье, решение владельца ([ADR 0025](../../docs/adr/0025-ingest-state-on-source.md)).
+
 ## 8. Поля по типам
 
 **B** = `type`, `origin`, `summary`; `aliases` — только настоящие варианты, `tags` — по потребности. **W** = B + шесть полей wiki-основы. Сигналы качества (`confidence`, `contested`, `contradictions`) — по условиям основы.
 
 | Тип и место | Обязательные | По возможности | Не вводятся и почему |
 | --- | --- | --- | --- |
-| `source`, `Источники/…` | B, `origin: source`; `ingested`, `sha256`, `captured_at`, `capture` | `source_url`, `author` | Wiki `created`/`updated`/`title`/`sources` — у сырья свой контракт |
+| `source`, `Источники/…` | B, `origin: source`; `ingested`, `sha256`, `captured_at`, `capture`, `processing` | `source_url`, `author` | Wiki `created`/`updated`/`title`/`sources` — у сырья свой контракт; дата разбора — в `log.md` |
 | `entity`, `concept`, `comparison`, `query`, `summary`, `Вики/…` | W | `aliases`, сигналы качества | `status`, `rating`, `verified`: нет операции; утверждение Плана не проверка тезиса |
 | `lecture`, `Обучение/…` | B; `course` при известном курсе | Ссылки и таймкоды в теле | `progress`, `status`: отсутствие конспекта не означает непройденную лекцию |
 | `course` | B | `url`, `community` | `completed`, `next_review` |

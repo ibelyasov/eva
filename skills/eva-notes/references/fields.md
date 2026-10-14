@@ -28,7 +28,7 @@
 | `type` | Где | Обязательные сверх общих | По возможности |
 | --- | --- | --- | --- |
 | `entity`, `concept`, `comparison`, `query`, `summary` | `Вики/…`, `Работа/Вики/` | `title`, `created`, `updated`, `tags` (допустим `[]`), `sources`; обычно `origin: agent` | `confidence`, `contested`, `contradictions` по условиям ниже |
-| `source` | `Источники/…` и доменные `Источники/` | `origin: source`, `ingested`, `sha256`, `captured_at`, `capture: full \| partial` | `source_url`, `author`; `title`, если имя файла отличается от заголовка |
+| `source` | `Источники/…` и доменные `Источники/` | `origin: source`, `ingested`, `sha256`, `captured_at`, `capture: full \| partial`, `processing: pending \| done \| skipped` | `source_url`, `author`; `title`, если имя файла отличается от заголовка |
 | `habit` | `Жизнь/Мои привычки/` | `habitify_id` | `provider_url` |
 | `project` | `Проекты/`, `Работа/Проекты/` | `singularity_id` | `provider_url` |
 | `course` | `Обучение/<Курс>/`, `Сообщества/<Сообщество>/Курсы/` | — | `url`; `community` у курса сообщества; `sources` при синтезе |
@@ -44,11 +44,12 @@
 - `confidence: high | medium | low` — по правилам основы, для одного источника, мнений и быстро меняющихся тем; без процентов.
 - `contested: true` — есть неразрешённое противоречие; обе позиции с источниками и датами — в теле. `contradictions` — список wikilinks на конфликтующие страницы, если они есть.
 - `source`: `sha256` — тела после frontmatter, у файла — байтов файла; `captured_at` — момент захвата снимка; `ingested` — его дата; `capture` — полнота захвата, не прочтение. Захват со сбоем — `inbox` с `capture: failed`, не `source`.
+- `source`: `processing` — состояние Разбора: `pending` — захвачен, не разобран; `done` — разобран; `skipped` — владелец сказал, что разбор не нужен. Захват ставит `pending`, а при словах владельца «для справки», «не разбирай» — `skipped`; Разбор ставит `done` последней записью ([wiki.md](wiki.md#разбор)). `skipped` ставится только по словам владельца. Это единственное поле источника, которое меняется после захвата: тело и остальные поля неизменны, `sha256` тела от него не зависит. Неразобранное — поиск `processing: pending` ([wiki.md](wiki.md#неразобранное)).
 - `habit`, `project`: ID только читается через установленный скилл-владелец, без него — `""`; `provider_url` — только если ссылку вернул провайдер, из ID её не собирай. Отметки, планы, статусы, задачи и сроки в заметку не попадают.
 - `journal`: время события и получения — в строке записи ([journal.md](journal.md)), не во frontmatter; `summary` — нейтрально «Записи за ДД.ММ.ГГГГ».
 - `inbox`: `channel` — канал поступления: `telegram`, `chat` (разговор с агентом вне мессенджера), `singularity`, `file`. `origin` — `owner` для своего текста, `source` для внешнего материала, в том числе неудачной ссылки.
 - `idea`: `origin` — `owner` или `agent` по основному тексту; ссылка на исходную строку дня — в теле.
-- Статусы, рейтинги, прогресс, сроки обзора, `categories` и `related` не вводи.
+- Статусы, рейтинги, прогресс, сроки обзора, `categories` и `related` не вводи; единственное поле состояния — `processing` у `source`.
 
 ## Примеры
 
@@ -78,6 +79,7 @@ captured_at: "2026-10-11T18:42:00+03:00"
 ingested: 2026-10-11
 sha256: ""
 capture: full
+processing: pending
 ---
 ```
 
