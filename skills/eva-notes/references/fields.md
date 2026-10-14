@@ -2,6 +2,8 @@
 
 Поля frontmatter — английские, значения — по-русски там, где это текст. Неизвестное не выдумывай: необязательное поле опускай, неизвестный ID провайдера — `""` с отметкой в Отчёте.
 
+Внутри `Работа/` типы, поля, шаблоны и теги — по `Работа/SCHEMA.md` и `Работа/AGENTS.md`, они главнее этого файла ([areas.md](areas.md#работа)). Где они молчат — форматы, [правило имён](#имена-файлов-и-папок) и [маркеры утверждений](#маркеры-утверждений) отсюда; «Общие поля» и «По типам» к `Работа/` не относятся.
+
 ## Форматы
 
 - Календарная дата — `ГГГГ-ММ-ДД` без кавычек: `created`, `updated`, `ingested`, `date`.
@@ -27,15 +29,15 @@
 
 | `type` | Где | Обязательные сверх общих | По возможности |
 | --- | --- | --- | --- |
-| `entity`, `concept`, `comparison`, `query`, `summary` | `Вики/…`, `Работа/Вики/` | `title`, `created`, `updated`, `tags` (допустим `[]`), `sources`; обычно `origin: agent` | `confidence`, `contested`, `contradictions` по условиям ниже |
-| `source` | `Источники/…` и доменные `Источники/` | `origin: source`, `ingested`, `sha256`, `captured_at`, `capture: full \| partial`, `processing: pending \| done \| skipped` | `source_url`, `author`; `title`, если имя файла отличается от заголовка |
+| `entity`, `concept`, `comparison`, `query`, `summary` | `Вики/…` | `title`, `created`, `updated`, `tags` (допустим `[]`), `sources`; обычно `origin: agent` | `confidence`, `contested`, `contradictions` по условиям ниже |
+| `source` | `Источники/…`, `Источники/` курса и сообщества | `origin: source`, `ingested`, `sha256`, `captured_at`, `capture: full \| partial`, `processing: pending \| done \| skipped` | `source_url`, `author`; `title`, если имя файла отличается от заголовка |
 | `habit` | `Жизнь/Мои привычки/` | `habitify_id` | `provider_url` |
-| `project` | `Проекты/`, `Работа/Проекты/` | `singularity_id` | `provider_url` |
+| `project` | `Проекты/` | `singularity_id` | `provider_url` |
 | `course` | `Обучение/<Курс>/`, `Сообщества/<Сообщество>/Курсы/` | — | `url`; `community` у курса сообщества; `sources` при синтезе |
 | `lecture` | Папки секций курса | `course` | `sources` у конспекта |
 | `community` | `Сообщества/<Сообщество>/` | — | `url`; `sources` при синтезе |
 | `journal` | `Дневник/ГГГГ/` | `origin: owner`, `date` | — |
-| `inbox` | `Входящие/`, `Работа/Входящие/` | `received_at`, `channel` | `source_url`, `capture: failed` |
+| `inbox` | `Входящие/` | `received_at`, `channel` | `source_url`, `capture: failed` |
 | `idea` | `Идеи/<Название>.md` | — | — |
 
 - Пять wiki-типов — контракт `llm-wiki`, их lint проверяет основа. Остальные `type` — расширение схемы; lint вики их по требованиям wiki не проверяет.
