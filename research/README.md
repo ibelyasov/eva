@@ -30,6 +30,7 @@ SingularityApp, `eva-habits` для экспериментов и ритуало
 | Как связывать скиллы и находить нужный сценарий? | [Композиция скиллов](agents/skill-composition.md) |
 | Когда и как Eva начинает сама: Инициатива, сообщения, тишина, Возвраты? | [Проактивность](agents/proactivity.md) |
 | Что известно о хосте скиллов? | [Hermes](platforms/hermes.md) |
+| Как `eva-notes` работает в других клиентах Agent Skills и где его ставить в Хранилище? | [Клиенты Agent Skills](platforms/agent-skills.md) |
 | Что рекомендовать при setup: предпочтения и время заданий Ритма? | [Рекомендации setup](setup.md) |
 | Какие ограничения есть у заимствований и атрибуции? | [Право и атрибуция](legal-and-attribution.md) |
 | Где найти цитату, URL/DOI, объём чтения и дату доступа? | [Единый реестр источников](sources.md) |
@@ -44,7 +45,7 @@ SingularityApp, `eva-habits` для экспериментов и ритуало
 | `eva-habits` | [привычки](habits/README.md) и досье раздела, [ритуалы](habits/rituals.md), [Habitify](providers/habitify.md); обратная ссылка привычки — [поля](notes/fields.md) |
 | `eva-calendar` | [наука календаря](calendar/academic.md), [методы и практики](calendar/methods-and-practices.md), [цвет записей](calendar/event-colors.md), [Google Calendar](providers/google-calendar.md) |
 | `eva-planning` | [наука календаря](calendar/academic.md), [методы и практики](calendar/methods-and-practices.md), [цвет записей](calendar/event-colors.md), [академические основания задач](tasks/academic.md) |
-| `eva-notes` | [Хранилище](notes/README.md): [академические основания](notes/academic.md), [практики сообщества](notes/community-practices.md), [идеи](notes/ideas.md), [поля](notes/fields.md); [хост Hermes](platforms/hermes.md) — встроенные `llm-wiki` и `obsidian`, песочница и кэш; [рекомендации setup, §4.9](setup.md#49-evanotesvault_name) |
+| `eva-notes` | [Хранилище](notes/README.md): [академические основания](notes/academic.md), [практики сообщества](notes/community-practices.md), [идеи](notes/ideas.md), [поля](notes/fields.md); [хост Hermes](platforms/hermes.md) — встроенные `llm-wiki` и `obsidian`, песочница и кэш; [клиенты Agent Skills](platforms/agent-skills.md) — host-нейтральный текст и Отдельная установка; [рекомендации setup, §4.9](setup.md#49-evanotesvault_name) |
 | `eva` | [проактивность](agents/proactivity.md) — Журнал, Инициатива, Ритм и Возвраты; [композиция скиллов](agents/skill-composition.md), [рекомендации setup](setup.md), [идеи](notes/ideas.md) — маршрутизация «запиши …» |
 | Все скиллы | [доспрос](agents/clarification.md), [композиция скиллов](agents/skill-composition.md), [проактивность](agents/proactivity.md) — сигналы и практики для Инициативы, форма сообщений, [хост Hermes](platforms/hermes.md) |
 
